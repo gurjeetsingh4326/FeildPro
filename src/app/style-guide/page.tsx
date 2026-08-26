@@ -1,4 +1,14 @@
-import { ClipboardList, DollarSign, Users, Wrench } from "lucide-react";
+"use client";
+
+import * as React from "react";
+import {
+  ClipboardList,
+  DollarSign,
+  Users,
+  Wrench,
+  Plus,
+  Trash2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge, PriorityBadge } from "@/components/ui/badge";
 import {
@@ -11,6 +21,52 @@ import {
 import { Input, Label, FieldError, FieldHelperText } from "@/components/ui/input";
 import { KpiCard } from "@/components/ui/kpi-card";
 import { ThemeToggle } from "@/components/theme-toggle";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+  SelectGroup,
+  SelectSeparator,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+  SortableTableHead,
+  type SortDirection,
+} from "@/components/ui/table";
+import { Tabs, TabsList, TabsTrigger, TabsContent, TabsPillList, TabsPillTrigger } from "@/components/ui/tabs";
+import { Avatar, AvatarStack } from "@/components/ui/avatar";
+import { SimpleTooltip } from "@/components/ui/tooltip";
+import {
+  Modal,
+  ModalTrigger,
+  ModalContent,
+  ModalHeader,
+  ModalTitle,
+  ModalDescription,
+  ModalBody,
+  ModalFooter,
+} from "@/components/ui/modal";
+import {
+  Drawer,
+  DrawerTrigger,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerDescription,
+  DrawerBody,
+  DrawerFooter,
+} from "@/components/ui/drawer";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "@/lib/toast-bus";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -24,14 +80,282 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 function Swatch({ name, className }: { name: string; className: string }) {
   return (
     <div className="flex flex-col gap-2">
-      <div className={cnBox(className)} />
+      <div className={`h-14 w-full rounded-md border border-border ${className}`} />
       <span className="text-[13px] text-text-secondary">{name}</span>
     </div>
   );
 }
 
-function cnBox(bg: string) {
-  return `h-14 w-full rounded-md border border-border ${bg}`;
+const WORK_ORDERS = [
+  { id: "WO-2024-00318", customer: "Acme Facilities Inc.", tech: "Maria Chen", status: "In Progress" as const, priority: "high" as const, total: 1240 },
+  { id: "WO-2024-00317", customer: "Northgate Mall", tech: "Sam Torres", status: "Scheduled" as const, priority: "medium" as const, total: 480 },
+  { id: "WO-2024-00316", customer: "Riverside Clinic", tech: "Dana Lee", status: "Completed" as const, priority: "urgent" as const, total: 2100 },
+  { id: "WO-2024-00315", customer: "Union Coffee Co.", tech: "Maria Chen", status: "Overdue" as const, priority: "low" as const, total: 150 },
+];
+
+function statusBadgeVariant(status: (typeof WORK_ORDERS)[number]["status"]) {
+  switch (status) {
+    case "Completed":
+      return "success" as const;
+    case "In Progress":
+      return "primary" as const;
+    case "Scheduled":
+      return "info" as const;
+    case "Overdue":
+      return "error" as const;
+  }
+}
+
+function InteractiveDemos() {
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [confirmOpen, setConfirmOpen] = React.useState(false);
+  const [sort, setSort] = React.useState<SortDirection>(null);
+
+  return (
+    <>
+      <Section title="Select">
+        <Select defaultValue="maria">
+          <SelectTrigger className="max-w-xs">
+            <SelectValue placeholder="Assign technician" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Available today</SelectLabel>
+              <SelectItem value="maria">Maria Chen</SelectItem>
+              <SelectItem value="sam">Sam Torres</SelectItem>
+            </SelectGroup>
+            <SelectSeparator />
+            <SelectGroup>
+              <SelectLabel>Fully booked</SelectLabel>
+              <SelectItem value="dana" disabled>
+                Dana Lee — 6 jobs today
+              </SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </Section>
+
+      <Section title="Tabs">
+        <Tabs defaultValue="overview">
+          <TabsList>
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="labor">Labor & Parts</TabsTrigger>
+            <TabsTrigger value="notes">Notes & Attachments</TabsTrigger>
+            <TabsTrigger value="timeline">Timeline</TabsTrigger>
+          </TabsList>
+          <TabsContent value="overview" className="text-sm text-text-secondary">
+            Underline-style page tabs — used on Work Order Details.
+          </TabsContent>
+          <TabsContent value="labor" className="text-sm text-text-secondary">
+            Labor & parts line items go here.
+          </TabsContent>
+          <TabsContent value="notes" className="text-sm text-text-secondary">
+            Notes & attachments go here.
+          </TabsContent>
+          <TabsContent value="timeline" className="text-sm text-text-secondary">
+            Audit trail goes here.
+          </TabsContent>
+        </Tabs>
+
+        <Tabs defaultValue="pill-7">
+          <TabsPillList className="w-fit">
+            <TabsPillTrigger value="pill-7">7d</TabsPillTrigger>
+            <TabsPillTrigger value="pill-30">30d</TabsPillTrigger>
+            <TabsPillTrigger value="pill-90">90d</TabsPillTrigger>
+          </TabsPillList>
+        </Tabs>
+      </Section>
+
+      <Section title="Avatars">
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2">
+            <Avatar name="Maria Chen" size="sm" />
+            <Avatar name="Sam Torres" size="md" />
+            <Avatar name="Dana Lee" size="lg" />
+          </div>
+          <AvatarStack
+            size="md"
+            people={[
+              { name: "Maria Chen" },
+              { name: "Sam Torres" },
+              { name: "Dana Lee" },
+              { name: "Alex Kim" },
+              { name: "Jordan Park" },
+            ]}
+          />
+        </div>
+      </Section>
+
+      <Section title="Tooltip">
+        <SimpleTooltip label="Dark chip style — consistent in both themes">
+          <Button variant="secondary">Hover me</Button>
+        </SimpleTooltip>
+      </Section>
+
+      <Section title="Table">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>WO #</TableHead>
+              <TableHead>Customer</TableHead>
+              <TableHead>Priority</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Technician</TableHead>
+              <SortableTableHead
+                className="text-right"
+                direction={sort}
+                onSort={() =>
+                  setSort((prev) => (prev === null ? "asc" : prev === "asc" ? "desc" : null))
+                }
+              >
+                Total
+              </SortableTableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {WORK_ORDERS.map((wo) => (
+              <TableRow key={wo.id}>
+                <TableCell className="font-mono text-text-secondary">{wo.id}</TableCell>
+                <TableCell className="font-medium">{wo.customer}</TableCell>
+                <TableCell>
+                  <PriorityBadge priority={wo.priority}>{wo.priority}</PriorityBadge>
+                </TableCell>
+                <TableCell>
+                  <Badge variant={statusBadgeVariant(wo.status)} dot>
+                    {wo.status}
+                  </Badge>
+                </TableCell>
+                <TableCell className="text-text-secondary">{wo.tech}</TableCell>
+                <TableCell className="text-right tabular-nums">
+                  ${wo.total.toLocaleString()}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Section>
+
+      <Section title="Skeleton (loading state)">
+        <div className="grid gap-4 sm:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="rounded-lg border border-border bg-surface p-5 space-y-3">
+              <Skeleton className="h-3 w-20" />
+              <Skeleton className="h-8 w-16" />
+              <Skeleton className="h-3 w-24" />
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      <Section title="Toast">
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="secondary"
+            onClick={() => toast({ variant: "success", title: "Work order updated", description: "WO-2024-00318 saved." })}
+          >
+            Success toast
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => toast({ variant: "warning", title: "Invoice overdue", description: "12 days past due." })}
+          >
+            Warning toast
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() =>
+              toast({
+                variant: "error",
+                title: "Couldn't reassign technician",
+                description: "Network error — try again.",
+                action: { label: "Retry", onClick: () => toast({ variant: "info", title: "Retrying…" }) },
+              })
+            }
+          >
+            Error toast (persists)
+          </Button>
+        </div>
+      </Section>
+
+      <Section title="Modal, Drawer & Confirm dialog">
+        <div className="flex flex-wrap gap-2">
+          <Modal open={modalOpen} onOpenChange={setModalOpen}>
+            <ModalTrigger asChild>
+              <Button variant="secondary">
+                <Plus className="size-4" /> Open modal
+              </Button>
+            </ModalTrigger>
+            <ModalContent>
+              <ModalHeader>
+                <ModalTitle>New Work Order</ModalTitle>
+                <ModalDescription>Create a work order for an existing customer.</ModalDescription>
+              </ModalHeader>
+              <ModalBody className="space-y-4">
+                <div>
+                  <Label htmlFor="modal-customer">Customer</Label>
+                  <Input id="modal-customer" placeholder="Search customers…" />
+                </div>
+              </ModalBody>
+              <ModalFooter>
+                <Button variant="secondary" onClick={() => setModalOpen(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={() => setModalOpen(false)}>Create Work Order</Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+
+          <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
+            <DrawerTrigger asChild>
+              <Button variant="secondary">Open drawer</Button>
+            </DrawerTrigger>
+            <DrawerContent>
+              <DrawerHeader>
+                <DrawerTitle>Assign Technician</DrawerTitle>
+                <DrawerDescription>WO-2024-00318 — Acme Facilities Inc.</DrawerDescription>
+              </DrawerHeader>
+              <DrawerBody className="space-y-3">
+                {["Maria Chen", "Sam Torres", "Dana Lee"].map((name) => (
+                  <div
+                    key={name}
+                    className="flex items-center gap-3 rounded-md border border-border p-3"
+                  >
+                    <Avatar name={name} />
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-text-primary">{name}</p>
+                      <p className="text-[13px] text-text-muted">3 jobs today</p>
+                    </div>
+                  </div>
+                ))}
+              </DrawerBody>
+              <DrawerFooter>
+                <Button variant="secondary" onClick={() => setDrawerOpen(false)}>
+                  Close
+                </Button>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
+
+          <Button variant="destructive" onClick={() => setConfirmOpen(true)}>
+            <Trash2 className="size-4" /> Delete customer
+          </Button>
+          <ConfirmDialog
+            open={confirmOpen}
+            onOpenChange={setConfirmOpen}
+            title="Delete this customer?"
+            description="This removes their profile and service history. This cannot be undone."
+            confirmLabel="Delete customer"
+            destructive
+            onConfirm={() => {
+              setConfirmOpen(false);
+              toast({ variant: "success", title: "Customer deleted" });
+            }}
+          />
+        </div>
+      </Section>
+    </>
+  );
 }
 
 export default function StyleGuidePage() {
@@ -159,7 +483,7 @@ export default function StyleGuidePage() {
           </div>
           <div>
             <Label htmlFor="disabled-field">Work order #</Label>
-            <Input id="disabled-field" value="WO-2024-00318" disabled />
+            <Input id="disabled-field" value="WO-2024-00318" disabled readOnly />
           </div>
         </div>
       </Section>
@@ -218,6 +542,8 @@ export default function StyleGuidePage() {
           </Card>
         </div>
       </Section>
+
+      <InteractiveDemos />
     </div>
   );
 }

@@ -33,6 +33,11 @@
      Equal to --primary in light mode; brightened in dark mode for AA contrast
      against a near-black page (see docs/DESIGN_DECISIONS.md — implementation note). */
   --primary-text: #4f46e5;
+  /* Small solid "chip" fill (avatar initials, small icon tiles) — distinct from
+     --primary-light, which is tuned to be a barely-there row/nav-item tint and
+     is too faint to read as a chip background on its own in dark mode. */
+  --chip-bg: #eef2ff;
+  --chip-text: #4f46e5;
 
   /* Accent (cyan) — secondary data series / informational emphasis only */
   --accent: #0891b2;
@@ -115,6 +120,8 @@
   --primary-active: #3730a3;
   --primary-light: rgba(129, 140, 248, 0.16);
   --primary-text: #818cf8;
+  --chip-bg: rgba(129, 140, 248, 0.28);
+  --chip-text: #c7d2fe;
 
   --accent: #22d3ee;
   --accent-hover: #67e8f9;
@@ -179,6 +186,8 @@
   --color-primary-active: var(--primary-active);
   --color-primary-light: var(--primary-light);
   --color-primary-text: var(--primary-text);
+  --color-chip-bg: var(--chip-bg);
+  --color-chip-text: var(--chip-text);
 
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);

@@ -28,7 +28,7 @@ function KpiCard({ label, value, icon: Icon, delta, className, ...props }: KpiCa
           {label}
         </span>
         {Icon ? (
-          <span className="flex size-8 items-center justify-center rounded-md bg-primary-light text-primary-text">
+          <span className="flex size-8 items-center justify-center rounded-md bg-chip-bg text-chip-text">
             <Icon className="size-4" />
           </span>
         ) : null}

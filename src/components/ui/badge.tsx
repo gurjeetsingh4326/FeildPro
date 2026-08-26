@@ -8,7 +8,7 @@ const badgeVariants = cva(
     variants: {
       variant: {
         neutral: "bg-surface-sunken text-text-secondary",
-        primary: "bg-primary-light text-primary-text",
+        primary: "bg-chip-bg text-chip-text",
         success: "bg-success-bg text-success",
         warning: "bg-warning-bg text-warning",
         error: "bg-error-bg text-error",

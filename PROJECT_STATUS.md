@@ -6,10 +6,9 @@ the full phased checklist this rolls up from.
 
 ## Current phase
 
-**Phase 0 — Design Foundation** → Next.js project scaffolded, design tokens
-implemented and verified (light + dark) in-browser, first 5 UI primitives built.
-Remaining primitives (Select, Table, Modal, Drawer, Toast, Tabs, Avatar, Tooltip,
-Skeleton) are next, then the app shell (Phase 1).
+**Phase 0 — Design Foundation is complete.** Next.js project scaffolded, design
+tokens implemented and verified (light + dark), and all base UI primitives built.
+Next up is Phase 1 — app shell (sidebar, header, role-based nav) and auth screens.
 
 ## Last updated
 
@@ -38,20 +37,38 @@ Skeleton) are next, then the app shell (Phase 1).
 - Wired Inter + JetBrains Mono via `next/font/google` in `src/app/layout.tsx`,
   plus a user-toggleable dark mode (`.dark` class, `localStorage`-persisted,
   anti-FOUC inline script) via `src/components/theme-toggle.tsx`.
-- Built first UI primitives in `src/components/ui/`: `Button` (4 variants, 3
-  sizes, loading/disabled), `Badge`/`PriorityBadge`, `Card` family, `Input`/
-  `Label`/`FieldError`/`FieldHelperText`, `KpiCard`. Utility: `cn()` in `src/lib/utils.ts`.
-- Added a `/style-guide` page exercising every token and primitive; verified
-  headlessly with Playwright in both themes — zero console errors, correct
-  fonts/colors/contrast in both light and dark (screenshots taken, not committed).
+- Built the full base primitive set in `src/components/ui/`: `Button` (4
+  variants, 3 sizes, loading/disabled), `Badge`/`PriorityBadge`, `Card` family,
+  `Input`/`Label`/`FieldError`/`FieldHelperText`, `KpiCard`, `Select`, `Table`
+  (+ `SortableTableHead`), `Modal`, `Drawer`, `ConfirmDialog`, `Tabs` (underline
+  + pill variants), `Avatar`/`AvatarStack`, `Tooltip`, `Skeleton`. Select/Modal/
+  Drawer/Tabs/Avatar/Tooltip/Toast are built on Radix UI primitives for
+  accessible focus-trap/portal/keyboard behavior. Utility: `cn()` in `src/lib/utils.ts`.
+- Built `Toast` on an RxJS event bus (`src/lib/toast-bus.ts`) so any component
+  can call `toast(...)` without prop-drilling a context — first real use of RxJS
+  in the stack. `Toaster` mounted once in the root layout alongside `TooltipProvider`.
+- Added `tw-animate-css` (Tailwind v4-compatible enter/exit animation utilities)
+  for Modal/Drawer/Select/Toast/Tooltip transitions.
+- Added a `/style-guide` page exercising every token and primitive (including
+  interactive demos for Select/Tabs/Modal/Drawer/Toast/ConfirmDialog); verified
+  headlessly with Playwright in both themes, plus a full production build
+  (`npm run build`) — zero console errors, zero type errors.
+- Fixed a real dark-mode contrast bug found during verification: Avatar/KPI-icon-tile/
+  primary-Badge chips were reusing `--primary-light` (tuned for barely-there
+  row/nav-item tinting, ~16% opacity) as their fill, which was nearly invisible
+  in dark mode. Added a dedicated `--chip-bg`/`--chip-text` token pair (calibrated
+  to read clearly as a small solid chip in both themes) and switched those three
+  components to it. `docs/COLOR_SYSTEM.md` doesn't yet document this new token —
+  noted below.
 
 ## What's next
 
-1. Finish the remaining base primitives: Select, Table, Modal, Drawer, Toast,
-   Tabs, Avatar, Tooltip, Skeleton (several need Radix UI primitives for
-   accessible focus-trap/portal behavior — not yet installed).
-2. Phase 1: app shell (sidebar, header, role-based nav) and auth screens.
-3. Phase 2: the 5 portfolio hero screens, starting with Dashboard.
+1. Phase 1: app shell (sidebar, header, role-based nav) and auth screens.
+2. Phase 2: the 5 portfolio hero screens, starting with Dashboard.
+3. Housekeeping: back-port two implementation-driven token additions into
+   `docs/COLOR_SYSTEM.md` so the docs match code — the `--primary`/`--primary-text`
+   split and the new `--chip-bg`/`--chip-text` pair (both explained inline in
+   `src/styles/tokens.css` comments in the meantime).
 
 ## Open questions / decisions needed from the user
 

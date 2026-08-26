@@ -12,9 +12,7 @@ for granular day-to-day status).
 - [x] User confirmation to proceed to implementation
 - [x] Scaffold Next.js + TypeScript + Tailwind project
 - [x] Implement design tokens in global CSS (`src/styles/tokens.css`, Tailwind v4 `@theme`) — light + dark, verified in-browser
-- [ ] Build base UI primitives (Button, Input, Select, Card, Badge, Table, Modal, Drawer, Toast, Tabs, Avatar, Tooltip, Skeleton)
-  - [x] Button, Badge/PriorityBadge, Card, Input/Label/FieldError, KpiCard
-  - [ ] Select, Table, Modal, Drawer, Toast, Tabs, Avatar, Tooltip, Skeleton
+- [x] Build base UI primitives (Button, Input, Select, Card, Badge, Table, Modal, Drawer, Toast, Tabs, Avatar, Tooltip, Skeleton) — plus ConfirmDialog. Verified in both themes via `/style-guide` + headless Playwright, zero console errors, production build passes.
 
 ## Phase 1 — App Shell & Navigation
 

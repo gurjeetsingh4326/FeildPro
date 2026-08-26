@@ -16,10 +16,11 @@ for granular day-to-day status).
 
 ## Phase 1 — App Shell & Navigation
 
-- [ ] Sidebar (expanded/collapsed/off-canvas states) + role-based nav visibility
-- [ ] Header (search, notifications, avatar menu)
-- [ ] Auth screens (Login, Forgot Password) — UI only, no real auth yet
-- [ ] Role switcher (dev-only tool for previewing Admin/Dispatcher/Technician/Accountant views against dummy data)
+- [x] Sidebar (expanded/collapsed/off-canvas states) + role-based nav visibility
+- [x] Header (search, notifications, avatar menu)
+- [x] Auth screens (Login, Forgot Password) — UI only, no real auth yet
+- [x] Role switcher (dev-only tool for previewing Admin/Dispatcher/Technician/Accountant views against dummy data)
+- [x] Placeholder pages for every nav destination so the shell is fully clickable ahead of Phase 2/3 content
 
 ## Phase 2 — Hero Screens (portfolio priority)
 

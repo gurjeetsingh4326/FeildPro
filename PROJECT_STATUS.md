@@ -6,9 +6,11 @@ the full phased checklist this rolls up from.
 
 ## Current phase
 
-**Phase 0 — Design Foundation is complete.** Next.js project scaffolded, design
-tokens implemented and verified (light + dark), and all base UI primitives built.
-Next up is Phase 1 — app shell (sidebar, header, role-based nav) and auth screens.
+**Phase 0 and Phase 1 are complete.** Design tokens, all base UI primitives, and
+the full app shell (sidebar, header, role-based nav, auth screens) are built and
+verified. Every nav destination routes somewhere (real dashboard content or a
+placeholder), so the shell is fully clickable end to end. Next up is Phase 2 —
+the 5 portfolio hero screens, starting with Dashboard.
 
 ## Last updated
 
@@ -61,14 +63,53 @@ Next up is Phase 1 — app shell (sidebar, header, role-based nav) and auth scre
   components to it. `docs/COLOR_SYSTEM.md` doesn't yet document this new token —
   noted below.
 
+- Built the Phase 1 app shell: `src/lib/roles.ts` + `src/lib/nav-config.ts` (role
+  → nav-item visibility, mirroring the project brief's Section 12 access lists
+  exactly — e.g. Dispatcher gets Customers/Work Orders/Schedule/Technicians/Services
+  but not Parts/Inventory/Reports, per the brief) and `src/lib/role-context.tsx`
+  (dev-only `RoleProvider`, localStorage-persisted, swappable via the header's
+  `RoleSwitcher` — disappears once Phase 6 wires real auth).
+- Built `src/components/layout/`: `Sidebar` (desktop, expanded 260px / collapsed
+  72px icon-rail, `lg`+ only) and `MobileSidebar` (off-canvas Radix Dialog drawer
+  below `lg`, triggered from the header hamburger — both share one `SidebarNav`
+  so they can't drift out of sync), `Header` (derived page title, search,
+  `RoleSwitcher`, notifications, help, theme toggle, avatar dropdown menu),
+  `RoleSwitcher`, `PlaceholderPage`. Added `DropdownMenu` primitive
+  (`src/components/ui/dropdown-menu.tsx`, Radix-based) for the avatar/role menus.
+- Route structure: `(app)` route group (shell layout + `RoleProvider`) holds
+  Dashboard (`/`, real KPI cards + a "more in Phase 2" note) and placeholder
+  pages for all 12 other nav destinations; `(auth)` route group (no shell) holds
+  `/login` and `/forgot-password`, both real React Hook Form + Zod forms that
+  redirect/succeed against dummy data (no backend yet). Deleted the old default
+  Next.js starter `src/app/page.tsx`, superseded by `(app)/page.tsx`.
+- Verified via full production build (17 routes, zero type errors) and headless
+  Playwright across desktop (1440px), mobile (390px), light, and dark — including
+  clicking through role switching, the avatar menu, and the mobile drawer.
+- Two real bugs found and fixed during verification:
+  1. Sidebar nav (13 items) overflowed its scrollable area by ~40px on common
+     900px-tall viewports, clipping "Reports" against the Administration section
+     with no visible scroll affordance. Fixed by tightening nav item height
+     40px→36px and section gaps 20px→16px — content now fits with zero overflow.
+  2. The role-switcher's two-line dropdown items (label + description) overflowed
+     the shared `DropdownMenuRadioItem`'s fixed 36px height and overlapped the
+     next item. Fixed the shared component's indicator to center via
+     `top-1/2 -translate-y-1/2` instead of flex-centering (so it no longer
+     assumes single-line content) and gave the role items `h-auto py-2.5`.
+- Fixed a doc/code mismatch: `RESPONSIVE_DESIGN.md`'s documented KPI-card grid
+  breakpoints (1 col below `md`, 2 at `md`–`lg`, 4 at `xl`+) didn't match the
+  implemented `grid-cols-2 sm:grid-cols-4` — aligned the Dashboard and style-guide
+  KPI grids to the documented breakpoints.
+
 ## What's next
 
-1. Phase 1: app shell (sidebar, header, role-based nav) and auth screens.
-2. Phase 2: the 5 portfolio hero screens, starting with Dashboard.
-3. Housekeeping: back-port two implementation-driven token additions into
-   `docs/COLOR_SYSTEM.md` so the docs match code — the `--primary`/`--primary-text`
-   split and the new `--chip-bg`/`--chip-text` pair (both explained inline in
-   `src/styles/tokens.css` comments in the meantime).
+1. Phase 2: the 5 portfolio hero screens, starting with Dashboard.
+2. Housekeeping: back-port three implementation-driven additions into the docs
+   so they match code — `docs/COLOR_SYSTEM.md` needs the `--primary`/`--primary-text`
+   split and the `--chip-bg`/`--chip-text` pair (both explained inline in
+   `src/styles/tokens.css` comments in the meantime); `docs/SPACING_AND_LAYOUT.md`'s
+   sidebar structure note still describes a "user/account footer" in the sidebar —
+   the account menu ended up in the header instead (standard SaaS pattern, avoids
+   a duplicate sign-out location), so that doc section needs updating to match.
 
 ## Open questions / decisions needed from the user
 

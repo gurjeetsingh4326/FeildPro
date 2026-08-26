@@ -1,0 +1,231 @@
+/*
+ * FieldPro design tokens.
+ * Source of truth: docs/COLOR_SYSTEM.md, docs/TYPOGRAPHY.md,
+ * docs/SPACING_AND_LAYOUT.md, docs/COMPONENT_GUIDELINES.md.
+ * Keep this file and those docs in sync — do not hardcode raw hex/px values
+ * in components; reference the Tailwind utilities these tokens generate
+ * (bg-primary, text-text-secondary, rounded-lg, shadow-md, etc.) instead.
+ */
+
+/* Enables a user-toggled `.dark` class on <html>, independent of OS preference. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  /* Surfaces & text — light mode (default) */
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --surface-elevated: #ffffff;
+  --surface-sunken: #f1f5f9;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --text-disabled: #cbd5e1;
+  --text-on-brand: #ffffff;
+
+  /* Brand — primary (indigo) */
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-active: #3730a3;
+  --primary-light: #eef2ff;
+  /* Foreground-safe primary for text/links/icons sitting on the page background.
+     Equal to --primary in light mode; brightened in dark mode for AA contrast
+     against a near-black page (see docs/DESIGN_DECISIONS.md — implementation note). */
+  --primary-text: #4f46e5;
+
+  /* Accent (cyan) — secondary data series / informational emphasis only */
+  --accent: #0891b2;
+  --accent-hover: #0e7490;
+
+  /* Sidebar — always the deep indigo-navy brand surface, in both themes */
+  --sidebar-bg: #151233;
+  --sidebar-border: #2a2a5c;
+  --sidebar-text: #e2e8f0;
+  --sidebar-text-muted: #9490b8;
+  --sidebar-active-bg: rgba(129, 140, 248, 0.16);
+  --sidebar-active-text: #ffffff;
+
+  /* Status */
+  --success: #16a34a;
+  --success-hover: #15803d;
+  --success-bg: #f0fdf4;
+  --warning: #d97706;
+  --warning-hover: #b45309;
+  --warning-bg: #fffbeb;
+  --error: #dc2626;
+  --error-hover: #b91c1c;
+  --error-bg: #fef2f2;
+  --info: #0891b2;
+  --info-hover: #0e7490;
+  --info-bg: #ecfeff;
+
+  /* Work-order priority (distinct from status) */
+  --priority-low: #64748b;
+  --priority-medium: #0891b2;
+  --priority-high: #d97706;
+  --priority-urgent: #dc2626;
+
+  /* Data visualization sequence */
+  --chart-1: #4f46e5; /* primary */
+  --chart-2: #0891b2; /* accent */
+  --chart-3: #16a34a; /* success */
+  --chart-4: #d97706; /* warning */
+  --chart-5: #a855f7; /* purple, 5th+ series only */
+  --chart-baseline: #94a3b8;
+
+  /* Elevation */
+  --shadow-color: 15 23 42; /* slate-900, as r g b for shadow rgb() */
+  --shadow-xs: 0 1px 2px rgb(var(--shadow-color) / 0.04);
+  --shadow-sm: 0 1px 3px rgb(var(--shadow-color) / 0.08), 0 1px 2px rgb(var(--shadow-color) / 0.04);
+  --shadow-md: 0 4px 12px rgb(var(--shadow-color) / 0.1);
+  --shadow-lg: 0 12px 32px rgb(var(--shadow-color) / 0.16);
+
+  /* z-index scale — reference via style={{ zIndex: 'var(--z-modal)' }}, not a
+     generated Tailwind utility (kept as plain custom properties for portability). */
+  --z-dropdown: 1000;
+  --z-sticky: 1100;
+  --z-drawer: 1200;
+  --z-modal-backdrop: 1300;
+  --z-modal: 1310;
+  --z-toast: 1400;
+  --z-tooltip: 1500;
+
+  /* Layout dimensions — identical in both themes */
+  --sidebar-width-expanded: 260px;
+  --sidebar-width-collapsed: 72px;
+  --header-height: 64px;
+}
+
+.dark {
+  --background: #0b0e1a;
+  --surface: #131725;
+  --surface-elevated: #1a1f35;
+  --surface-sunken: #0e1120;
+  --border: #232838;
+  --border-strong: #323950;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-disabled: #475569;
+  --text-on-brand: #ffffff;
+
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-active: #3730a3;
+  --primary-light: rgba(129, 140, 248, 0.16);
+  --primary-text: #818cf8;
+
+  --accent: #22d3ee;
+  --accent-hover: #67e8f9;
+
+  --sidebar-bg: #0e1120;
+  --sidebar-border: #232838;
+  --sidebar-text: #f1f5f9;
+  --sidebar-text-muted: #94a3b8;
+  --sidebar-active-bg: rgba(129, 140, 248, 0.16);
+  --sidebar-active-text: #ffffff;
+
+  --success: #4ade80;
+  --success-hover: #86efac;
+  --success-bg: rgba(22, 163, 74, 0.16);
+  --warning: #fbbf24;
+  --warning-hover: #fcd34d;
+  --warning-bg: rgba(217, 119, 6, 0.16);
+  --error: #f87171;
+  --error-hover: #fca5a5;
+  --error-bg: rgba(220, 38, 38, 0.16);
+  --info: #38bdf8;
+  --info-hover: #7dd3fc;
+  --info-bg: rgba(37, 99, 235, 0.16);
+
+  --priority-low: #94a3b8;
+  --priority-medium: #22d3ee;
+  --priority-high: #fbbf24;
+  --priority-urgent: #f87171;
+
+  --chart-1: #818cf8;
+  --chart-2: #22d3ee;
+  --chart-3: #4ade80;
+  --chart-4: #fbbf24;
+  --chart-5: #c084fc;
+  --chart-baseline: #64748b;
+
+  --shadow-color: 0 0 0;
+  --shadow-xs: 0 1px 2px rgb(var(--shadow-color) / 0.24);
+  --shadow-sm: 0 1px 3px rgb(var(--shadow-color) / 0.32), 0 1px 2px rgb(var(--shadow-color) / 0.24);
+  --shadow-md: 0 4px 12px rgb(var(--shadow-color) / 0.4);
+  --shadow-lg: 0 12px 32px rgb(var(--shadow-color) / 0.5);
+}
+
+/* Maps the raw custom properties above onto Tailwind v4's theme namespace, so
+   `bg-primary`, `text-text-secondary`, `border-border`, `rounded-lg`,
+   `shadow-md`, etc. become generated utilities backed by these tokens. */
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-disabled: var(--text-disabled);
+  --color-text-on-brand: var(--text-on-brand);
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
+  --color-primary-light: var(--primary-light);
+  --color-primary-text: var(--primary-text);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+
+  --color-sidebar-bg: var(--sidebar-bg);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-text: var(--sidebar-text);
+  --color-sidebar-text-muted: var(--sidebar-text-muted);
+  --color-sidebar-active-bg: var(--sidebar-active-bg);
+  --color-sidebar-active-text: var(--sidebar-active-text);
+
+  --color-success: var(--success);
+  --color-success-hover: var(--success-hover);
+  --color-success-bg: var(--success-bg);
+  --color-warning: var(--warning);
+  --color-warning-hover: var(--warning-hover);
+  --color-warning-bg: var(--warning-bg);
+  --color-error: var(--error);
+  --color-error-hover: var(--error-hover);
+  --color-error-bg: var(--error-bg);
+  --color-info: var(--info);
+  --color-info-hover: var(--info-hover);
+  --color-info-bg: var(--info-bg);
+
+  --color-priority-low: var(--priority-low);
+  --color-priority-medium: var(--priority-medium);
+  --color-priority-high: var(--priority-high);
+  --color-priority-urgent: var(--priority-urgent);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-baseline: var(--chart-baseline);
+
+  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+}

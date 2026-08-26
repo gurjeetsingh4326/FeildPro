@@ -17,3 +17,44 @@ body {
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }
+
+/* Thin, theme-matched scrollbars — the browser default looks especially
+   jarring against the dark sidebar. Applied wherever content can genuinely
+   overflow: sidebar/drawer nav, modal/drawer bodies, table horizontal scroll. */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: var(--border-strong);
+  border-radius: 9999px;
+}
+
+/* The sidebar/mobile-drawer nav is always on the dark --sidebar-bg regardless
+   of app theme, so its scrollbar thumb is a fixed light tint rather than the
+   theme-adaptive --border-strong used elsewhere. */
+.scrollbar-thin-dark {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+.scrollbar-thin-dark::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scrollbar-thin-dark::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin-dark::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.18);
+  border-radius: 9999px;
+}
+.scrollbar-thin-dark::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.28);
+}

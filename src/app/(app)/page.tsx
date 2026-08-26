@@ -1,13 +1,37 @@
-import { ClipboardList, Calendar, DollarSign, Wrench } from "lucide-react";
+import { ClipboardList, Calendar, DollarSign, Wrench, Plus } from "lucide-react";
 import { KpiCard } from "@/components/ui/kpi-card";
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { LayoutDashboard } from "lucide-react";
-import { PlaceholderPage } from "@/components/layout/placeholder-page";
+import { Button } from "@/components/ui/button";
+import { RevenueTrendCard } from "@/components/dashboard/revenue-trend-card";
+import { TodayScheduleCard } from "@/components/dashboard/today-schedule-card";
+import { UnassignedWorkOrdersCard } from "@/components/dashboard/unassigned-work-orders-card";
+import { TechnicianUtilizationCard } from "@/components/dashboard/technician-utilization-card";
+import { RecentActivityCard } from "@/components/dashboard/recent-activity-card";
+import { OutstandingInvoicesCard } from "@/components/dashboard/outstanding-invoices-card";
+
+const TODAY = new Date("2026-08-26T09:00:00");
+const FORMATTED_DATE = TODAY.toLocaleDateString("en-US", {
+  weekday: "long",
+  month: "long",
+  day: "numeric",
+});
 
 export default function DashboardPage() {
   return (
-    <div className="flex flex-1 flex-col">
-      <div className="grid grid-cols-1 gap-4 p-6 md:grid-cols-2 xl:grid-cols-4">
+    <div className="flex flex-1 flex-col gap-6 p-4 sm:p-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight text-text-primary sm:text-[28px]">
+            Good morning, Priya
+          </h2>
+          <p className="mt-0.5 text-sm text-text-secondary">{FORMATTED_DATE}</p>
+        </div>
+        <Button className="gap-1.5 sm:w-auto">
+          <Plus className="size-4" />
+          New Work Order
+        </Button>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         <KpiCard
           label="Open Work Orders"
           value="42"
@@ -34,24 +58,18 @@ export default function DashboardPage() {
         />
       </div>
 
-      <div className="px-6 pb-6">
-        <Card className="border-dashed">
-          <CardHeader>
-            <CardTitle>More on the way</CardTitle>
-          </CardHeader>
-          <CardDescription>
-            Revenue trend, today&apos;s schedule, unassigned work orders, technician
-            utilization, and outstanding invoices land here in Phase 2 — see
-            docs/DASHBOARD_DESIGN.md for the full composition.
-          </CardDescription>
-        </Card>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <RevenueTrendCard />
+        <TodayScheduleCard />
       </div>
 
-      <PlaceholderPage
-        icon={LayoutDashboard}
-        title="Full dashboard coming in Phase 2"
-        description="This shell proves the app frame, tokens, and primitives compose correctly. The hero-quality dashboard (charts, schedule, activity feed) is next."
-      />
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <UnassignedWorkOrdersCard />
+        <TechnicianUtilizationCard />
+        <RecentActivityCard />
+      </div>
+
+      <OutstandingInvoicesCard />
     </div>
   );
 }

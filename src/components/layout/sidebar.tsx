@@ -88,7 +88,7 @@ function SidebarNav({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?
 
   return (
     <>
-      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-4">
+      <nav className="scrollbar-thin-dark flex-1 overflow-y-auto px-3 py-4 space-y-4">
         {NAV_SECTIONS.map((section, i) => {
           const items = section.items.filter((item) => isNavItemVisible(item, role));
           if (items.length === 0) return null;

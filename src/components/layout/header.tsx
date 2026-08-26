@@ -47,7 +47,9 @@ export function Header() {
           />
         </div>
 
-        <RoleSwitcher />
+        <span className="hidden sm:block">
+          <RoleSwitcher />
+        </span>
 
         <SimpleTooltip label="Notifications">
           <button
@@ -64,7 +66,7 @@ export function Header() {
           <button
             type="button"
             aria-label="Help"
-            className="flex size-9 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-background hover:text-text-primary"
+            className="hidden size-9 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-background hover:text-text-primary sm:flex"
           >
             <HelpCircle className="size-[18px]" />
           </button>

@@ -24,7 +24,7 @@ for granular day-to-day status).
 
 ## Phase 2 — Hero Screens (portfolio priority)
 
-- [ ] Dashboard
+- [x] Dashboard — KPI row, revenue trend chart (7d/30d/90d), today's schedule, unassigned work orders, technician utilization, recent activity, outstanding invoices. Verified responsive from 320px to desktop, both themes.
 - [ ] Dispatcher / Schedule (week/day/month, drag-and-drop)
 - [ ] Work Orders (table + Kanban views)
 - [ ] Work Order Details (tabs, timeline, labor/parts, attachments)

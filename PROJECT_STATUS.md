@@ -6,10 +6,9 @@ the full phased checklist this rolls up from.
 
 ## Current phase
 
-**Phase 0 and Phase 1 are complete; Phase 2 is underway** — the Dashboard hero
-screen is built and verified responsive from 320px to desktop, both themes.
-4 of 5 hero screens remain: Dispatcher/Schedule, Work Orders, Work Order
-Details, Technician Mobile View.
+**Phase 0 and Phase 1 are complete; Phase 2 is underway** — Dashboard and
+Dispatcher/Schedule are both built and verified. 3 of 5 hero screens remain:
+Work Orders, Work Order Details, Technician Mobile View.
 
 ## Last updated
 
@@ -137,10 +136,58 @@ Details, Technician Mobile View.
   table pattern — first real use of that pattern, to be reused for the full
   Work Orders table next.
 
+- Built the Dispatcher/Schedule hero screen: a Day board (technician rows ×
+  hourly columns, `src/components/schedule/day-board.tsx`), a Week grid (day
+  columns, `week-grid.tsx`), a read-only Month overview (`month-grid.tsx`), and
+  a mobile day agenda (`mobile-day-agenda.tsx`), all driven by
+  `src/lib/dummy-data/schedule.ts` (6 technicians with fixed per-technician
+  colors, one week of appointments). Real drag-and-drop via `@dnd-kit/core`:
+  reassign an appointment's technician/time by dropping it on a Day-board cell,
+  reschedule to a different day by dropping it on a Week-grid column, and
+  assign/unassign via a draggable unassigned-jobs tray — each drop fires a
+  confirming toast and updates state immediately.
+- **Three real bugs found while getting drag-and-drop actually working** (not
+  just visually plausible — verified by dispatching real pointer events and
+  checking dnd-kit's internal `isOver`/`isDragging` state, not just screenshots):
+  1. dnd-kit's `DndContext` assigns internal ids (`aria-describedby`) via a
+     module-level counter, not React's SSR-safe `useId()`, so the server- and
+     client-rendered value can genuinely differ across a fresh Next.js process
+     — a hydration-mismatch warning on every load. Fixed by opting the whole
+     schedule view out of SSR (`next/dynamic` with `ssr: false`, via a small
+     Client Component wrapper since `ssr: false` isn't allowed directly in a
+     Server Component page file) — it's an inherently client-only interaction
+     with no SEO value lost.
+  2. Dragging a chip out of the unassigned tray or the day board made it
+     **vanish** — both containers use `overflow-x-auto`/`overflow-y-auto`, and
+     a CSS-transformed child moving outside an overflow-clipped ancestor's
+     bounds gets clipped from view, even though dnd-kit still tracks it
+     correctly. Fixed with dnd-kit's `DragOverlay` (portaled outside all
+     scroll containers) — the original item now just dims in place as a
+     placeholder while the overlay shows the actual moving chip.
+  3. The real root cause of drops not registering at all: the responsive
+     layout had three CSS `hidden md:block`-style blocks for Day/Week/Month at
+     different breakpoints, but **CSS `display:none` doesn't unmount a
+     component** — so multiple copies of `WeekGrid`/`UnassignedTray` were
+     simultaneously mounted and registered under the *same* droppable id with
+     dnd-kit's global registry, corrupting collision detection for all of
+     them. Fixed by adding `src/hooks/use-breakpoint.ts` (a `matchMedia`-based
+     hook) and rendering exactly one variant at a time based on actual
+     breakpoint, instead of three parallel CSS-hidden ones. This is a real
+     trap worth remembering for any future component that registers into a
+     global keyed system (drag-and-drop, portals, singleton observers) — CSS
+     responsive variants are safe for plain markup, not for those.
+- Also fixed, from the same responsiveness push: the day-navigation buttons/
+  label/"Today" button were gated on `view === "day"`, which is a `view`-state
+  check that doesn't track which layout is *actually* rendered at the current
+  breakpoint (e.g. at md–lg the week grid is force-shown regardless of `view`)
+  — could show day-nav controls that silently did nothing, or hide them on
+  mobile where the single-day agenda always needs them. Split into
+  breakpoint-scoped controls that mirror the same one-variant-at-a-time logic.
+
 ## What's next
 
-1. Phase 2: the remaining 4 hero screens — Dispatcher/Schedule, Work Orders,
-   Work Order Details, Technician Mobile View.
+1. Phase 2: the remaining 3 hero screens — Work Orders, Work Order Details,
+   Technician Mobile View.
 2. Housekeeping: back-port three implementation-driven additions into the docs
    so they match code — `docs/COLOR_SYSTEM.md` needs the `--primary`/`--primary-text`
    split and the `--chip-bg`/`--chip-text` pair (both explained inline in

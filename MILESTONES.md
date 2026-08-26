@@ -25,7 +25,7 @@ for granular day-to-day status).
 ## Phase 2 — Hero Screens (portfolio priority)
 
 - [x] Dashboard — KPI row, revenue trend chart (7d/30d/90d), today's schedule, unassigned work orders, technician utilization, recent activity, outstanding invoices. Verified responsive from 320px to desktop, both themes.
-- [ ] Dispatcher / Schedule (week/day/month, drag-and-drop)
+- [x] Dispatcher / Schedule — Day board (technician-per-row × hourly grid), Week grid, read-only Month overview, real drag-and-drop (reassign technician/time, drag between days, drag to/from an unassigned tray) via dnd-kit. Responsive: Day/Week/Month toggle at xl+, week-only at md–lg, single-day read-only agenda below md. Verified both themes, and the drag interaction itself (not just static rendering) via automated pointer-event tests.
 - [ ] Work Orders (table + Kanban views)
 - [ ] Work Order Details (tabs, timeline, labor/parts, attachments)
 - [ ] Technician Mobile View (today's jobs, job execution flow)

@@ -6,9 +6,11 @@ the full phased checklist this rolls up from.
 
 ## Current phase
 
-**Phase 0 and Phase 1 are complete; Phase 2 is underway** — Dashboard,
-Dispatcher/Schedule, Work Orders, and Work Order Details are all built and
-verified. 1 of 5 hero screens remains: Technician Mobile View.
+**Phase 0, Phase 1, and Phase 2 are complete** — all 5 portfolio hero screens
+(Dashboard, Dispatcher/Schedule, Work Orders, Work Order Details, Technician
+Mobile View) are built and verified. Phase 3 (remaining core modules:
+Customers, Technicians, Services, Parts & Inventory, Invoices, Payments,
+Reports) is next.
 
 ## Last updated
 
@@ -285,10 +287,80 @@ verified. 1 of 5 hero screens remains: Technician Mobile View.
   button, and the invalid-id 404 path — against both the hand-curated hero
   record and a plain derived one, not just the hero screenshot.
 
+- Built the Technician Mobile View hero screen — the last of the 5. Per
+  `docs/RESPONSIVE_DESIGN.md`, FieldPro ships two responsive experiences off
+  one codebase: below `md`, the Technician role now gets a dedicated shell
+  (`src/components/technician-mobile/technician-shell.tsx`: minimal title bar
+  + 56px bottom tab bar — Today/Jobs/Schedule/Profile) instead of the admin
+  sidebar+header shell. The swap lives in a new
+  `src/components/layout/app-shell.tsx` (role from `useRole()`, breakpoint
+  from the existing `useBreakpoint()` hook), which `(app)/layout.tsx` now
+  renders instead of its old inline Sidebar/Header JSX — every other role/
+  breakpoint combination is pixel-identical to before.
+  - **Today** (`/today`): greeting header, jobs-today/completed stat tiles,
+    and a chronological agenda of compact job cards (time, customer, address
+    + a fabricated distance, status) — reuses the existing `Card`/`Badge`
+    primitives via a new shared `JobCard`.
+  - **Job execution** reuses the *same* `/work-orders/[id]` URL as the
+    desktop Work Order Details page — a new `WorkOrderDetailRouter` client
+    component picks between the existing `WorkOrderDetailView` and a new
+    `JobExecutionView` based on role + breakpoint, so resizing the window
+    swaps experiences live with no reload and no route duplication.
+    `JobExecutionView` has customer/service header with Call (`tel:`) and
+    Navigate (Google Maps deep link) quick actions, a simulated
+    Saving…/Saved autosave indicator (per `docs/UI_PATTERNS.md`'s autosave
+    spec for this flow) that fires on every labor/part/note/photo edit, and
+    Labor/Parts/Notes/Photos as collapsible sections — a new
+    `src/components/ui/collapsible.tsx` primitive (`@radix-ui/react-collapsible`,
+    the first new Radix dependency since Phase 0) built to match the existing
+    primitive-wrapper conventions. The Add Labor/Add Part modals are reused
+    directly from the desktop `wo-labor-parts-tab.tsx` (now exported) rather
+    than duplicated. A large pinned Start/Complete/Resume Job button sticks
+    to the bottom of the scrollable content, above the tab bar.
+  - **Jobs** (`/jobs`) and **Profile** (`/profile`) round out the tab bar —
+    all upcoming jobs grouped by date, and a stats/contact/sign-out screen,
+    respectively. **Schedule** reuses the existing `/schedule` route as-is
+    (already collapses to a single-day agenda below `md`).
+  - New dummy-data layer: `src/lib/dummy-data/technician.ts` derives today's
+    and upcoming jobs for a technician from the existing `WORK_ORDERS` array
+    (added 5 new entries for Maria Chen — one already-completed, one
+    in-progress reusing the existing WO-2024-00318 hero record, two later
+    today, two on following days — so Today reads as a realistic full day
+    rather than a single sparse card, per `docs/DASHBOARD_DESIGN.md`'s "no
+    orphaned/empty states" rule).
+  - **One real bug found and fixed during verification**: `JobCard` stacked
+    the time and status badge in a fixed `w-16` column, and "In Progress"
+    (the longest status label) wrapped onto two lines inside it, badly
+    misaligned — invisible for every other status (all shorter) and so not
+    caught until the specific in-progress card was screenshotted. Fixed by
+    moving the badge out of the fixed-width time column onto its own
+    full-width row under the service line.
+  - Verified via full production build (22 routes) and headless Playwright:
+    role switched to Technician at 390px in both themes — Today's agenda,
+    opening a job, Call/Navigate `href`s, expanding a collapsible and adding
+    a part (autosave indicator fires), the in-progress → completed status
+    transition, and tab-bar navigation to Jobs/Schedule/Profile; confirmed
+    the shell swaps live on resize (390→1024→390, no reload) with zero
+    console errors; confirmed zero regression to the desktop admin shell and
+    the existing Work Order Details tabs UI at 1440px for every role.
+  - **Note**: `npm run lint` (ESLint's React Compiler rules) surfaces 6
+    pre-existing errors in code untouched by this session (`theme-toggle.tsx`,
+    `role-context.tsx`, `work-orders-view.tsx`, and two `Date.now()` calls in
+    `wo-labor-parts-tab.tsx` predating this session's export-only edits there)
+    — `setState`-in-effect and impure-function-during-render warnings from a
+    stricter ruleset than `next build`'s own linting enforces. Left as-is
+    since fixing them wasn't in scope for this screen; worth a dedicated pass
+    since `npm run lint` has apparently never been part of this project's
+    verification loop so far.
+
 ## What's next
 
-1. Phase 2: the last hero screen — Technician Mobile View.
-2. Housekeeping: back-port three implementation-driven additions into the docs
+1. Phase 3: the remaining core modules — Customers, Technicians, Services,
+   Parts & Inventory, Invoices, Payments, Reports.
+2. Housekeeping: run `npm run lint` and clean up the 6 pre-existing errors it
+   surfaces (see note above) — not blocking, but worth doing before Phase 3
+   adds more surface area.
+3. Housekeeping: back-port three implementation-driven additions into the docs
    so they match code — `docs/COLOR_SYSTEM.md` needs the `--primary`/`--primary-text`
    split and the `--chip-bg`/`--chip-text` pair (both explained inline in
    `src/styles/tokens.css` comments in the meantime); `docs/SPACING_AND_LAYOUT.md`'s

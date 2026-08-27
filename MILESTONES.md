@@ -28,7 +28,20 @@ for granular day-to-day status).
 - [x] Dispatcher / Schedule — Day board (technician-per-row × hourly grid), Week grid, read-only Month overview, real drag-and-drop (reassign technician/time, drag between days, drag to/from an unassigned tray) via dnd-kit. Responsive: Day/Week/Month toggle at xl+, week-only at md–lg, single-day read-only agenda below md. Verified both themes, and the drag interaction itself (not just static rendering) via automated pointer-event tests.
 - [x] Work Orders — sortable/paginated table + Kanban board (5-column dispatch workflow) with real drag-and-drop status changes, search, status/priority filters with removable chips, and a working "New Work Order" form (React Hook Form + Zod). Mobile gets a stacked card list instead of the table, per `docs/RESPONSIVE_DESIGN.md`. Verified functionally (search/sort/filter/paginate/create/drag all exercised, not just rendered) across breakpoints and both themes.
 - [x] Work Order Details — header with status-driven action buttons, Overview/Labor & Parts/Notes & Attachments/Timeline tabs, customer + technician + quick-facts right rail, and an Assign Technician drawer. One hand-curated "hero" work order for the portfolio screenshot; every other row derives a plausible detail view from its own table data. Verified functionally (tab switching, add/remove labor & parts, post a note, assign/reassign, status-change buttons, 404 for a bad id) across breakpoints and both themes, plus a full production build.
-- [ ] Technician Mobile View (today's jobs, job execution flow)
+- [x] Technician Mobile View — below `md`, the Technician role gets a dedicated
+  shell (top title bar + 56px bottom tab bar: Today/Jobs/Schedule/Profile, no
+  sidebar) instead of the desktop admin shell, live-swapping on resize with no
+  reload. Today screen: greeting + jobs-today/completed stats + chronological
+  agenda cards (time, customer, address + distance, status). Job execution
+  screen (same `/work-orders/[id]` URL as the desktop detail view, routed by
+  role + breakpoint): Call/Navigate quick actions (`tel:`/Google Maps deep
+  links), collapsible Labor/Parts/Notes/Photos sections with a simulated
+  autosave "Saving…/Saved" indicator, and a pinned Start/Complete/Resume Job
+  button. Jobs (all upcoming, grouped by date) and Profile (stats, contact,
+  sign out) round out the tab bar. Verified functionally (tab navigation, add
+  labor/part, status transitions, Call/Navigate hrefs, live shell swap on
+  resize, no regression to the desktop admin/Work-Order-Details experience)
+  in both themes against a full production build.
 
 ## Phase 3 — Remaining Core Modules
 

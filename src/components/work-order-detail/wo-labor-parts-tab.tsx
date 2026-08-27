@@ -26,7 +26,7 @@ import {
 import { TECHNICIANS } from "@/lib/dummy-data/schedule";
 import type { LaborLine, PartLine } from "@/lib/dummy-data/work-order-detail";
 
-function formatMoney(value: number) {
+export function formatMoney(value: number) {
   return value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
@@ -46,7 +46,7 @@ const partSchema = z.object({
 });
 type PartValues = z.infer<typeof partSchema>;
 
-function AddLaborModal({ open, onOpenChange, onAdd }: { open: boolean; onOpenChange: (v: boolean) => void; onAdd: (line: LaborLine) => void }) {
+export function AddLaborModal({ open, onOpenChange, onAdd }: { open: boolean; onOpenChange: (v: boolean) => void; onAdd: (line: LaborLine) => void }) {
   const { register, control, handleSubmit, reset, formState: { errors } } = useForm({
     resolver: zodResolver(laborSchema),
     defaultValues: { technicianName: TECHNICIANS[0].name, description: "", hours: 1, rate: 95 },
@@ -117,7 +117,7 @@ function AddLaborModal({ open, onOpenChange, onAdd }: { open: boolean; onOpenCha
   );
 }
 
-function AddPartModal({ open, onOpenChange, onAdd }: { open: boolean; onOpenChange: (v: boolean) => void; onAdd: (line: PartLine) => void }) {
+export function AddPartModal({ open, onOpenChange, onAdd }: { open: boolean; onOpenChange: (v: boolean) => void; onAdd: (line: PartLine) => void }) {
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
     resolver: zodResolver(partSchema),
     defaultValues: { partName: "", sku: "", quantity: 1, unitPrice: 0 },

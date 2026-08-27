@@ -48,4 +48,13 @@ export const WORK_ORDERS: WorkOrder[] = [
   { id: "WO-2024-00333", customerName: "Pinecrest Offices", service: "Server Room Cooling Upgrade", priority: "high", status: "scheduled", technicianName: "Sam Torres", scheduledDate: "2026-08-29", scheduledTime: "8:00 AM", total: 4800 },
   { id: "WO-2024-00334", customerName: "Lakeside Apartments", service: "Common Area Electrical Repair", priority: "medium", status: "invoiced", technicianName: "Maria Chen", scheduledDate: "2026-08-22", scheduledTime: "2:00 PM", total: 720 },
   { id: "WO-2024-00335", customerName: "Sunrise Senior Living", service: "Emergency Call Button System Test", priority: "urgent", status: "completed", technicianName: "Dana Lee", scheduledDate: "2026-08-25", scheduledTime: "9:00 AM", total: 950 },
+
+  // Maria Chen's day, for the Technician Mobile View hero screen (docs/DASHBOARD_DESIGN.md
+  // section 5) — a realistic full day: one already done, one in progress (WO-2024-00318
+  // above), two still ahead — plus a couple of upcoming days for the Jobs tab.
+  { id: "WO-2024-00336", customerName: "Sunrise Senior Living", service: "Fire Extinguisher Inspection", priority: "low", status: "completed", technicianName: "Maria Chen", scheduledDate: "2026-08-26", scheduledTime: "7:30 AM", total: 95 },
+  { id: "WO-2024-00337", customerName: "Metro Bank Branch", service: "Backup Battery Replacement", priority: "medium", status: "scheduled", technicianName: "Maria Chen", scheduledDate: "2026-08-26", scheduledTime: "1:30 PM", total: 340 },
+  { id: "WO-2024-00338", customerName: "Green Valley School", service: "HVAC Filter Check", priority: "low", status: "scheduled", technicianName: "Maria Chen", scheduledDate: "2026-08-26", scheduledTime: "4:30 PM", total: 150 },
+  { id: "WO-2024-00339", customerName: "Lakeside Apartments", service: "Water Heater Follow-up Check", priority: "medium", status: "scheduled", technicianName: "Maria Chen", scheduledDate: "2026-08-27", scheduledTime: "10:00 AM", total: 180 },
+  { id: "WO-2024-00340", customerName: "Union Coffee Co.", service: "Ice Machine Repair", priority: "medium", status: "scheduled", technicianName: "Maria Chen", scheduledDate: "2026-08-28", scheduledTime: "9:30 AM", total: 260 },
 ];

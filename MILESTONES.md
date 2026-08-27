@@ -63,7 +63,15 @@ for granular day-to-day status).
   Verified functionally (search/filter/sort/create, tab switching, the Work
   Order Details → Technician Profile "View profile" link, bad-id 404) across
   breakpoints and both themes, plus a full production build.
-- [ ] Services
+- [x] Services — the service catalog work orders are built from. Sortable/
+  searchable/filterable (category, status) list with inline edit (row pencil
+  icon) and a single reusable create/edit modal, no separate detail page (a
+  lighter scope than Customers/Technicians — a catalog entry, not a
+  relationship-bearing entity). The New Work Order form's service dropdown
+  now sources from this catalog instead of its own separate hardcoded list.
+  Verified functionally (search/filter/sort/create/edit, the New Work Order
+  integration) across breakpoints and both themes, plus a full production
+  build.
 - [ ] Parts & Inventory
 - [ ] Invoices
 - [ ] Payments

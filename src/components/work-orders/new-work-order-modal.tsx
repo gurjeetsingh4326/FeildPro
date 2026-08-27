@@ -27,21 +27,11 @@ import {
 import { toast } from "@/lib/toast-bus";
 import { TECHNICIANS } from "@/lib/dummy-data/schedule";
 import { CUSTOMERS } from "@/lib/dummy-data/customers";
+import { SERVICES } from "@/lib/dummy-data/services";
 import type { WorkOrder } from "@/lib/dummy-data/work-orders";
 import type { WorkOrderPriority } from "@/lib/types";
 
-const SERVICES = [
-  "HVAC Preventive Maintenance",
-  "Electrical Panel Inspection",
-  "Emergency Plumbing Repair",
-  "Refrigeration Unit Service",
-  "Water Heater Replacement",
-  "Fire Suppression Inspection",
-  "Boiler Maintenance",
-  "Electrical Rewiring",
-  "AC Unit Repair",
-  "Alarm System Service",
-];
+const ACTIVE_SERVICES = SERVICES.filter((s) => s.status === "active");
 
 const formSchema = z.object({
   customerName: z.string().min(1, "Select a customer"),
@@ -146,9 +136,9 @@ export function NewWorkOrderModal({ onCreate, nextId }: NewWorkOrderModalProps) 
                       <SelectValue placeholder="Select a service" />
                     </SelectTrigger>
                     <SelectContent>
-                      {SERVICES.map((s) => (
-                        <SelectItem key={s} value={s}>
-                          {s}
+                      {ACTIVE_SERVICES.map((s) => (
+                        <SelectItem key={s.id} value={s.name}>
+                          {s.name}
                         </SelectItem>
                       ))}
                     </SelectContent>

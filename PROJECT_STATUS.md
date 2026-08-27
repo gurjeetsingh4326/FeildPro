@@ -7,9 +7,9 @@ the full phased checklist this rolls up from.
 ## Current phase
 
 **Phase 0, Phase 1, and Phase 2 are complete; Phase 3 is underway** — all 5
-portfolio hero screens are built and verified, and Customers and Technicians
-(the first 2 Phase 3 modules) are done. 5 Phase 3 modules remain: Services,
-Parts & Inventory, Invoices, Payments, Reports.
+portfolio hero screens are built and verified, and Customers, Technicians,
+and Services (the first 3 Phase 3 modules) are done. 4 Phase 3 modules
+remain: Parts & Inventory, Invoices, Payments, Reports.
 
 ## Last updated
 
@@ -438,10 +438,36 @@ Parts & Inventory, Invoices, Payments, Reports.
     screenshot was taken, not a real rendering bug; confirmed by re-screenshotting
     after the transition settled.)
 
+- Built the Services module — the third Phase 3 module, and deliberately
+  lighter-scoped than Customers/Technicians: a service catalog entry doesn't
+  carry contacts/history/availability, so it's list-only with inline edit
+  rather than a separate profile route.
+  - **List** (`/services`): search/category filter/status filter/sort
+    (duration, price)/paginate, a "New Service" button, and a per-row pencil
+    icon opening the same create/edit modal component in edit mode
+    (pre-filled, `PATCH`-style upsert) — one form, two entry points, instead
+    of a separate edit component.
+  - New `src/lib/dummy-data/services.ts`: 14 catalog entries across HVAC/
+    Electrical/Plumbing/Refrigeration/Fire & Safety/General, each with a
+    category, description, estimated duration, and base price.
+  - Refactored the New Work Order form's service dropdown
+    (`new-work-order-modal.tsx`) to source its options from this catalog
+    (filtered to `status: "active"`) instead of its own separately hardcoded
+    10-item list — the same duplication pattern already fixed twice for
+    customer and technician names, caught proactively this time before it
+    could drift.
+  - Verified via full production build (22 routes — no new dynamic route,
+    since there's no detail page) and headless Playwright in both themes:
+    search, sort, the category filter, creating a service, editing an
+    existing one (confirmed the modal prefilled correctly and the change
+    persisted in the table), and confirmed the New Work Order modal's service
+    list now reflects the catalog — with zero regression to Work Orders,
+    Customers, Technicians, or the Technician Mobile View.
+
 ## What's next
 
-1. Phase 3: the remaining modules — Services, Parts & Inventory, Invoices,
-   Payments, Reports.
+1. Phase 3: the remaining modules — Parts & Inventory, Invoices, Payments,
+   Reports.
 2. Housekeeping: run `npm run lint` and clean up the 6 pre-existing errors it
    surfaces (see note above) — not blocking, but worth doing before Phase 3
    adds more surface area.

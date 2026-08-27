@@ -54,7 +54,15 @@ for granular day-to-day status).
   switching, add contact/address, the Work Order Details → Customer Profile
   "View profile" link, bad-id 404) across breakpoints and both themes, plus a
   full production build.
-- [ ] Technicians (list, profile, skills, availability, performance)
+- [x] Technicians — sortable/paginated/searchable list (status filter, "New
+  Technician" form) plus a profile page (Overview/Availability/Performance
+  tabs, right rail with utilization + contact) at `/technicians/[id]`.
+  Availability is a weekly hours grid; Performance shows KPI tiles (jobs
+  completed, revenue, on-time rate, avg. job value) plus a recent-jobs list
+  linking back to Work Order Details. Mobile gets a stacked card list.
+  Verified functionally (search/filter/sort/create, tab switching, the Work
+  Order Details → Technician Profile "View profile" link, bad-id 404) across
+  breakpoints and both themes, plus a full production build.
 - [ ] Services
 - [ ] Parts & Inventory
 - [ ] Invoices

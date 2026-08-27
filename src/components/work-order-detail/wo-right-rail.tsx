@@ -4,6 +4,7 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { getCustomerByName } from "@/lib/dummy-data/customers";
+import { getTechnicianByName } from "@/lib/dummy-data/technicians";
 import type { CustomerContact } from "@/lib/dummy-data/work-order-detail";
 import type { WorkOrder } from "@/lib/dummy-data/work-orders";
 
@@ -17,6 +18,7 @@ export interface WoRightRailProps {
 
 export function WoRightRail({ workOrder, customer, createdDate, source, onOpenAssign }: WoRightRailProps) {
   const customerId = getCustomerByName(customer.name)?.id;
+  const technicianId = workOrder.technicianName ? getTechnicianByName(workOrder.technicianName)?.id : undefined;
 
   return (
     <div className="space-y-4">
@@ -60,6 +62,11 @@ export function WoRightRail({ workOrder, customer, createdDate, source, onOpenAs
       <Card>
         <CardHeader>
           <CardTitle>Technician</CardTitle>
+          {technicianId ? (
+            <Link href={`/technicians/${technicianId}`} className="text-[13px] font-medium text-primary-text hover:underline">
+              View profile
+            </Link>
+          ) : null}
         </CardHeader>
         {workOrder.technicianName ? (
           <div className="flex items-center justify-between gap-2">

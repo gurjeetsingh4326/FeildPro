@@ -7,8 +7,8 @@ the full phased checklist this rolls up from.
 ## Current phase
 
 **Phase 0, Phase 1, and Phase 2 are complete; Phase 3 is underway** — all 5
-portfolio hero screens are built and verified, and Customers (the first
-Phase 3 module) is done. 6 Phase 3 modules remain: Technicians, Services,
+portfolio hero screens are built and verified, and Customers and Technicians
+(the first 2 Phase 3 modules) are done. 5 Phase 3 modules remain: Services,
 Parts & Inventory, Invoices, Payments, Reports.
 
 ## Last updated
@@ -400,10 +400,48 @@ Parts & Inventory, Invoices, Payments, Reports.
     with zero regression to Work Orders, Work Order Details, or the
     Technician Mobile View.
 
+- Built the Technicians module — the second Phase 3 module, same "list +
+  profile" skeleton and lighter (non-hero) verification bar as Customers.
+  - **List** (`/technicians`): search/filter (status: Active/On Leave/
+    Inactive)/sort/paginate/table-vs-mobile-card-list, plus a "New
+    Technician" form. Utilization reuses the exact `Progress` component +
+    `tone="auto"` color-threshold convention already established on the
+    Dashboard's Technician Utilization widget.
+  - **Profile** (`/technicians/[id]`): the same detail-page skeleton as
+    Customer Profile. Overview (role, hire date, skill badges) / Availability
+    (a simple weekly hours grid) / Performance (four `KpiCard`s — jobs
+    completed, total revenue, on-time rate, avg. job value — reusing the same
+    primitive as the Dashboard, plus a recent-jobs list linking back to
+    `/work-orders/[id]`) tabs; right rail has utilization + contact.
+  - New `src/lib/dummy-data/technicians.ts` builds on the 6 technicians
+    already established in `schedule.ts` (id/name/color) rather than
+    introducing a parallel roster, adding role/contact/hire-date/skills/
+    availability per technician plus `getTechnicianStats()` computed from
+    the existing `WORK_ORDERS` and `APPOINTMENTS` arrays (jobs-today and
+    utilization from today's actual schedule, not a hardcoded number) — same
+    "compute from source data" discipline the Customers module established,
+    applied from the start this time instead of needing a fix afterward.
+    On-time rate and customer rating have no underlying tracked data model
+    yet, so those two are hand-picked per technician rather than formula-
+    generated — an early draft used a seeded formula and produced an
+    obviously artificial linear sequence (4.3, 4.4, 4.5…) for only 6 people,
+    caught before it shipped.
+  - Also wired the Work Order Details right rail's Technician card with the
+    same "View profile" link pattern just added for Customer.
+  - Verified via full production build (24 routes) and headless Playwright in
+    both themes: search, sort, the status filter, creating a technician, all
+    three profile tabs, the View-profile deep link, and the bad-id 404 — at
+    desktop and mobile widths, with zero regression to Work Orders, Work
+    Order Details, Customers, or the Technician Mobile View. (One apparent
+    bug during review — two tab underlines visible at once in a screenshot —
+    turned out to be the opacity-transition mid-fade at the instant the
+    screenshot was taken, not a real rendering bug; confirmed by re-screenshotting
+    after the transition settled.)
+
 ## What's next
 
-1. Phase 3: the remaining modules — Technicians, Services, Parts & Inventory,
-   Invoices, Payments, Reports.
+1. Phase 3: the remaining modules — Services, Parts & Inventory, Invoices,
+   Payments, Reports.
 2. Housekeeping: run `npm run lint` and clean up the 6 pre-existing errors it
    surfaces (see note above) — not blocking, but worth doing before Phase 3
    adds more surface area.

@@ -6,11 +6,10 @@ the full phased checklist this rolls up from.
 
 ## Current phase
 
-**Phase 0, Phase 1, and Phase 2 are complete** — all 5 portfolio hero screens
-(Dashboard, Dispatcher/Schedule, Work Orders, Work Order Details, Technician
-Mobile View) are built and verified. Phase 3 (remaining core modules:
-Customers, Technicians, Services, Parts & Inventory, Invoices, Payments,
-Reports) is next.
+**Phase 0, Phase 1, and Phase 2 are complete; Phase 3 is underway** — all 5
+portfolio hero screens are built and verified, and Customers (the first
+Phase 3 module) is done. 6 Phase 3 modules remain: Technicians, Services,
+Parts & Inventory, Invoices, Payments, Reports.
 
 ## Last updated
 
@@ -353,10 +352,58 @@ Reports) is next.
     since `npm run lint` has apparently never been part of this project's
     verification loop so far.
 
+- Built the Customers module — the first Phase 3 module, and the first screen
+  built outside the 5 hero screens, so to the lighter "follows the base
+  component/pattern docs without extra elaboration" bar `docs/DASHBOARD_DESIGN.md`
+  sets for everything past the hero set (still fully functional and verified,
+  just without the hero screens' extra polish investment).
+  - **List** (`/customers`): the same search/filter/sort/paginate/table-vs-
+    mobile-card-list skeleton as Work Orders (`docs/UI_PATTERNS.md`'s generic
+    list/table pattern), a status filter (Active/Inactive), and a "New
+    Customer" form. No Kanban/drag-and-drop needed here, so — unlike Work
+    Orders — no SSR-opt-out workaround was required.
+  - **Profile** (`/customers/[id]`): the standard detail-page skeleton
+    (`docs/UI_PATTERNS.md`) — two-column at `xl`+, right rail collapses below
+    primary content first. Overview / Contacts / Addresses / History tabs;
+    Contacts and Addresses support add/remove (Zod + React Hook Form modals,
+    reusing the same primitives as Work Order Details' Add Labor/Add Part);
+    History lists the customer's work orders linking back to
+    `/work-orders/[id]`.
+  - New `src/lib/dummy-data/customers.ts` is now the single source of truth
+    for customer contact/address data — one hand-curated hero customer (Acme
+    Facilities Inc., matching the existing Work Order Details hero record)
+    plus 12 derived ones, with helpers (`getCustomerStats`, etc.) computed
+    from the existing `WORK_ORDERS` array. Refactored
+    `work-order-detail.ts` (Work Order Details) and `new-work-order-modal.tsx`
+    (Work Orders) to source customer address/contact/name data from here
+    instead of their own separate hardcoded copies — the kind of duplication
+    that's easy to let drift once a second consumer shows up.
+  - **One real data-consistency bug found and fixed during verification**:
+    the Work Order Details hero record (`HERO_DETAIL` in
+    `work-order-detail.ts`) had customer stats (`openWorkOrders: 2,
+    totalSpend: 8420`) hand-typed as static literals back when that screen
+    was built — never wrong on its own, but once the new Customer Profile
+    page computed the *same* customer's stats from the live `WORK_ORDERS`
+    array, the two pages showed different numbers ($8,420 vs. the correct
+    $1,520) for the same customer, one click apart via the new "View profile"
+    link. Fixed by computing `HERO_DETAIL`'s customer stats from
+    `getCustomerStats()` too, so both pages now always agree — a good
+    illustration of why hand-typed derived numbers are risky once a second
+    screen starts computing the same thing from the source data.
+  - Also wired the Work Order Details right rail's "View profile" link (a
+    placeholder pointing at bare `/customers` since before Customer Profile
+    pages existed) to the actual `/customers/[id]` URL.
+  - Verified via full production build (23 routes) and headless Playwright in
+    both themes: search, sort, the status filter, creating a customer, all
+    four profile tabs, adding a contact, the View-profile deep link and its
+    now-consistent numbers, and the bad-id 404 — at desktop and mobile widths,
+    with zero regression to Work Orders, Work Order Details, or the
+    Technician Mobile View.
+
 ## What's next
 
-1. Phase 3: the remaining core modules — Customers, Technicians, Services,
-   Parts & Inventory, Invoices, Payments, Reports.
+1. Phase 3: the remaining modules — Technicians, Services, Parts & Inventory,
+   Invoices, Payments, Reports.
 2. Housekeeping: run `npm run lint` and clean up the 6 pre-existing errors it
    surfaces (see note above) — not blocking, but worth doing before Phase 3
    adds more surface area.

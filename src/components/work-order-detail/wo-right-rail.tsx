@@ -3,6 +3,7 @@ import { Phone, Mail, MapPin, UserPlus } from "lucide-react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { getCustomerByName } from "@/lib/dummy-data/customers";
 import type { CustomerContact } from "@/lib/dummy-data/work-order-detail";
 import type { WorkOrder } from "@/lib/dummy-data/work-orders";
 
@@ -15,12 +16,17 @@ export interface WoRightRailProps {
 }
 
 export function WoRightRail({ workOrder, customer, createdDate, source, onOpenAssign }: WoRightRailProps) {
+  const customerId = getCustomerByName(customer.name)?.id;
+
   return (
     <div className="space-y-4">
       <Card>
         <CardHeader>
           <CardTitle>Customer</CardTitle>
-          <Link href="/customers" className="text-[13px] font-medium text-primary-text hover:underline">
+          <Link
+            href={customerId ? `/customers/${customerId}` : "/customers"}
+            className="text-[13px] font-medium text-primary-text hover:underline"
+          >
             View profile
           </Link>
         </CardHeader>

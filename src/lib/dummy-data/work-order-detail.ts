@@ -1,5 +1,6 @@
 import { TECHNICIANS } from "@/lib/dummy-data/schedule";
 import { WORK_ORDERS, type WorkOrder } from "@/lib/dummy-data/work-orders";
+import { getCustomerByName, getCustomerStats, getPrimaryAddress, getPrimaryContact } from "@/lib/dummy-data/customers";
 import type { ActivityEventType } from "@/lib/types";
 
 export interface LaborLine {
@@ -63,37 +64,6 @@ export interface WorkOrderDetail {
   timeline: TimelineEntry[];
 }
 
-/** Real addresses already established in the Schedule module, reused here so
-    the same customer reads consistently across the app. */
-const CUSTOMER_ADDRESSES: Record<string, string> = {
-  "Acme Facilities Inc.": "1204 Industrial Pkwy",
-  "Union Coffee Co.": "22 Union Sq",
-  "Northgate Mall": "500 Northgate Dr",
-  "Downtown Office Tower": "1 Downtown Plz",
-  "Riverside Clinic": "88 Riverside Ave",
-  "Bright Start Daycare": "77 Maple St",
-  "Lakeside Apartments": "45 Lakeside Dr",
-  "Green Valley School": "12 Green Valley Rd",
-  "Harbor View Hotel": "300 Harbor View Rd",
-  "Pinecrest Offices": "9 Pinecrest Ave",
-  "Cedar Ridge Apartments": "14 Cedar Ridge Ln",
-  "Metro Bank Branch": "200 Main St",
-  "Sunrise Senior Living": "55 Sunrise Blvd",
-};
-
-function emailFor(customerName: string) {
-  const slug = customerName
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "")
-    .slice(0, 12);
-  return `ops@${slug}.com`;
-}
-
-function phoneFor(id: string) {
-  const digits = id.replace(/\D/g, "").slice(-4).padStart(4, "0");
-  return `(555) 010-${digits}`;
-}
-
 const RATE = 95;
 
 /** One fully hand-curated, richly-detailed work order for the portfolio hero
@@ -111,8 +81,8 @@ const HERO_DETAIL: WorkOrderDetail = {
     phone: "(555) 010-2291",
     email: "facilities@acme.com",
     address: "1204 Industrial Pkwy",
-    openWorkOrders: 2,
-    totalSpend: 8420,
+    openWorkOrders: getCustomerStats("Acme Facilities Inc.").openWorkOrders,
+    totalSpend: getCustomerStats("Acme Facilities Inc.").totalSpend,
   },
   labor: [
     { id: "lab-1", technicianName: "Maria Chen", description: "HVAC inspection & filter replacement", hours: 1.5, rate: RATE },
@@ -148,7 +118,9 @@ const HERO_DETAIL: WorkOrderDetail = {
 };
 
 function deriveDetail(wo: WorkOrder): WorkOrderDetail {
-  const address = CUSTOMER_ADDRESSES[wo.customerName] ?? "Address on file";
+  const customerRecord = getCustomerByName(wo.customerName);
+  const primaryContact = customerRecord ? getPrimaryContact(customerRecord) : null;
+  const primaryAddress = customerRecord ? getPrimaryAddress(customerRecord) : null;
   const hours = wo.priority === "urgent" ? 3 : wo.priority === "high" ? 2 : wo.priority === "medium" ? 1.5 : 1;
   const technicianName = wo.technicianName ?? TECHNICIANS[0].name;
 
@@ -200,13 +172,10 @@ function deriveDetail(wo: WorkOrder): WorkOrderDetail {
     createdDate: wo.scheduledDate,
     customer: {
       name: wo.customerName,
-      phone: phoneFor(wo.id),
-      email: emailFor(wo.customerName),
-      address,
-      openWorkOrders: WORK_ORDERS.filter(
-        (w) => w.customerName === wo.customerName && !["paid", "cancelled"].includes(w.status)
-      ).length,
-      totalSpend: WORK_ORDERS.filter((w) => w.customerName === wo.customerName).reduce((sum, w) => sum + w.total, 0),
+      phone: primaryContact?.phone ?? "Phone on file",
+      email: primaryContact?.email ?? "Email on file",
+      address: primaryAddress?.address ?? "Address on file",
+      ...getCustomerStats(wo.customerName),
     },
     labor:
       wo.status === "draft"

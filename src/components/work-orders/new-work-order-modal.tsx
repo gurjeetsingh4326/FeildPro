@@ -26,24 +26,9 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/lib/toast-bus";
 import { TECHNICIANS } from "@/lib/dummy-data/schedule";
+import { CUSTOMERS } from "@/lib/dummy-data/customers";
 import type { WorkOrder } from "@/lib/dummy-data/work-orders";
 import type { WorkOrderPriority } from "@/lib/types";
-
-const CUSTOMERS = [
-  "Acme Facilities Inc.",
-  "Northgate Mall",
-  "Riverside Clinic",
-  "Union Coffee Co.",
-  "Lakeside Apartments",
-  "Downtown Office Tower",
-  "Green Valley School",
-  "Bright Start Daycare",
-  "Harbor View Hotel",
-  "Pinecrest Offices",
-  "Cedar Ridge Apartments",
-  "Metro Bank Branch",
-  "Sunrise Senior Living",
-];
 
 const SERVICES = [
   "HVAC Preventive Maintenance",
@@ -139,8 +124,8 @@ export function NewWorkOrderModal({ onCreate, nextId }: NewWorkOrderModalProps) 
                     </SelectTrigger>
                     <SelectContent>
                       {CUSTOMERS.map((c) => (
-                        <SelectItem key={c} value={c}>
-                          {c}
+                        <SelectItem key={c.id} value={c.name}>
+                          {c.name}
                         </SelectItem>
                       ))}
                     </SelectContent>

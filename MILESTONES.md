@@ -45,7 +45,15 @@ for granular day-to-day status).
 
 ## Phase 3 — Remaining Core Modules
 
-- [ ] Customers (list, profile, contacts, addresses, history)
+- [x] Customers — sortable/paginated/searchable list (status filter, "New
+  Customer" form) plus a profile page (Overview/Contacts/Addresses/History
+  tabs, right rail with quick facts + primary contact/address) at
+  `/customers/[id]`. Mobile gets a stacked card list, matching the pattern
+  established for Work Orders. Add/remove contacts and addresses is
+  functional. Verified functionally (search/filter/sort/paginate/create, tab
+  switching, add contact/address, the Work Order Details → Customer Profile
+  "View profile" link, bad-id 404) across breakpoints and both themes, plus a
+  full production build.
 - [ ] Technicians (list, profile, skills, availability, performance)
 - [ ] Services
 - [ ] Parts & Inventory

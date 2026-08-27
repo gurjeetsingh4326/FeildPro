@@ -26,8 +26,8 @@ for granular day-to-day status).
 
 - [x] Dashboard — KPI row, revenue trend chart (7d/30d/90d), today's schedule, unassigned work orders, technician utilization, recent activity, outstanding invoices. Verified responsive from 320px to desktop, both themes.
 - [x] Dispatcher / Schedule — Day board (technician-per-row × hourly grid), Week grid, read-only Month overview, real drag-and-drop (reassign technician/time, drag between days, drag to/from an unassigned tray) via dnd-kit. Responsive: Day/Week/Month toggle at xl+, week-only at md–lg, single-day read-only agenda below md. Verified both themes, and the drag interaction itself (not just static rendering) via automated pointer-event tests.
-- [ ] Work Orders (table + Kanban views)
-- [ ] Work Order Details (tabs, timeline, labor/parts, attachments)
+- [x] Work Orders — sortable/paginated table + Kanban board (5-column dispatch workflow) with real drag-and-drop status changes, search, status/priority filters with removable chips, and a working "New Work Order" form (React Hook Form + Zod). Mobile gets a stacked card list instead of the table, per `docs/RESPONSIVE_DESIGN.md`. Verified functionally (search/sort/filter/paginate/create/drag all exercised, not just rendered) across breakpoints and both themes.
+- [x] Work Order Details — header with status-driven action buttons, Overview/Labor & Parts/Notes & Attachments/Timeline tabs, customer + technician + quick-facts right rail, and an Assign Technician drawer. One hand-curated "hero" work order for the portfolio screenshot; every other row derives a plausible detail view from its own table data. Verified functionally (tab switching, add/remove labor & parts, post a note, assign/reassign, status-change buttons, 404 for a bad id) across breakpoints and both themes, plus a full production build.
 - [ ] Technician Mobile View (today's jobs, job execution flow)
 
 ## Phase 3 — Remaining Core Modules

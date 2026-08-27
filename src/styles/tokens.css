@@ -87,12 +87,18 @@
   --shadow-lg: 0 12px 32px rgb(var(--shadow-color) / 0.16);
 
   /* z-index scale — reference via style={{ zIndex: 'var(--z-modal)' }}, not a
-     generated Tailwind utility (kept as plain custom properties for portability). */
-  --z-dropdown: 1000;
+     generated Tailwind utility (kept as plain custom properties for portability).
+     --z-dropdown sits ABOVE modal/drawer, not below: a Select/DropdownMenu
+     triggered from inside a Modal (e.g. the "New Work Order" form) must render
+     its popover above that modal's backdrop, not get visually trapped behind
+     it — dropdowns are inherently transient top-layer content regardless of
+     what context opened them. Toast/Tooltip stay highest since those must
+     stay visible over literally everything, including an open dropdown. */
   --z-sticky: 1100;
   --z-drawer: 1200;
-  --z-modal-backdrop: 1300;
-  --z-modal: 1310;
+  --z-modal-backdrop: 1250;
+  --z-modal: 1260;
+  --z-dropdown: 1300;
   --z-toast: 1400;
   --z-tooltip: 1500;
 

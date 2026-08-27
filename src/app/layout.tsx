@@ -30,7 +30,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        {/* type swap avoids a dev-only "rendering produces <script> tags" warning on
+            hydration — see node_modules/next/dist/docs/01-app/02-guides/preventing-flash-before-hydration.md.
+            The script still executes on the initial HTML parse because the server
+            always emits type="text/javascript"; the client-only "text/plain" value
+            never reaches the browser before hydration. */}
+        <script
+          type={typeof window === "undefined" ? "text/javascript" : "text/plain"}
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: themeInitScript }}
+        />
       </head>
       <body className="min-h-full flex flex-col bg-background text-text-primary">
         <TooltipProvider delayDuration={200}>

@@ -6,13 +6,13 @@ the full phased checklist this rolls up from.
 
 ## Current phase
 
-**Phase 0 and Phase 1 are complete; Phase 2 is underway** — Dashboard and
-Dispatcher/Schedule are both built and verified. 3 of 5 hero screens remain:
-Work Orders, Work Order Details, Technician Mobile View.
+**Phase 0 and Phase 1 are complete; Phase 2 is underway** — Dashboard,
+Dispatcher/Schedule, Work Orders, and Work Order Details are all built and
+verified. 1 of 5 hero screens remains: Technician Mobile View.
 
 ## Last updated
 
-2026-08-26
+2026-08-27
 
 ## What's done
 
@@ -183,11 +183,111 @@ Work Orders, Work Order Details, Technician Mobile View.
   — could show day-nav controls that silently did nothing, or hide them on
   mobile where the single-day agenda always needs them. Split into
   breakpoint-scoped controls that mirror the same one-variant-at-a-time logic.
+- Fixed a real layout gap the user flagged directly: no page used a max-width
+  container, so grid-based pages (Dashboard, Schedule) stretched full-bleed on
+  wide monitors — KPI cards ballooning to ~600px each at 2560px, etc. This was
+  actually already anticipated in `docs/RESPONSIVE_DESIGN.md`'s 2xl breakpoint
+  row ("content does not stretch full-bleed") but never implemented. Fixed
+  once at the `(app)` layout level (`max-w-[1600px] mx-auto` wrapping
+  `{children}` inside `<main>`) so every current and future page gets it for
+  free rather than each needing its own cap; the header stays full-width
+  (standard pattern — chrome spans edge-to-edge, content sits in a bounded
+  reading column). Updated `docs/SPACING_AND_LAYOUT.md`'s "Page content
+  max-width" row to match (was documented as "none (fluid)"). Verified at
+  2560px (Dashboard, Schedule) and confirmed zero visual change at 1440px/
+  1024px, where content was already under the cap.
+- Built the Work Orders hero screen: sortable/paginated table
+  (`src/components/work-orders/work-orders-table.tsx`) and a 5-column Kanban
+  board (`kanban-board.tsx`, Draft/Scheduled/In Progress/On Hold/Completed —
+  Invoiced/Paid/Cancelled are terminal/financial states left to the table and
+  the future Invoices module) with real drag-and-drop status changes, search,
+  removable status/priority filter chips, and a working "New Work Order" form
+  (`new-work-order-modal.tsx`, React Hook Form + Zod). Reused the Schedule
+  page's SSR-safe dnd-kit pattern (`work-orders-loader.tsx` dynamically
+  imports the view with `ssr: false`) from the start this time instead of
+  discovering the hydration-mismatch issue again. Backed by
+  `src/lib/dummy-data/work-orders.ts` (24 work orders) and
+  `src/lib/work-order-status.ts` (shared status→badge-variant mapping, will
+  be reused by Work Order Details next).
+- **Found and fixed a real z-index bug** while testing the "New Work Order"
+  modal's Customer/Service `Select` dropdowns: any dropdown opened from
+  *inside* a Modal rendered visually behind the modal's own backdrop and was
+  unclickable. The scale had `--z-dropdown: 1000` below `--z-modal-backdrop:
+  1300` — correct for a dropdown triggered from the plain page, wrong for one
+  nested inside a modal, since transient popover content needs to render
+  above whatever context opened it. Reordered `src/styles/tokens.css`'s scale
+  so `--z-dropdown` (1300) sits above `--z-modal` (1260), with Toast/Tooltip
+  still highest. This is exactly the kind of bug that's invisible in a static
+  screenshot and only shows up when a flow is actually driven end-to-end —
+  caught here because the New Work Order form was exercised for real
+  (selecting a customer, submitting, checking the confirmation toast) rather
+  than just screenshotted while closed.
+- Also fixed a responsiveness gap this surfaced: the 8-column table has no
+  reasonable phone-width layout even with horizontal scroll, so added
+  `work-orders-mobile-list.tsx` — a stacked card list below `md`, matching the
+  pattern already established for the Dashboard's Outstanding Invoices widget
+  and exactly what `docs/RESPONSIVE_DESIGN.md`'s table row already specified.
+  Confirmed tablet (768–1023px) correctly keeps the horizontal-scrolling full
+  table per that same doc row ("full table, horizontal scroll if needed").
+- Added a placeholder at `/work-orders/[id]` so the table/Kanban/mobile-list's
+  work-order links go somewhere real instead of a 404 ahead of building the
+  actual Work Order Details page next.
+
+- Built the Work Order Details hero screen (`(app)/work-orders/[id]/page.tsx`
+  + `src/components/work-order-detail/`): a header with status-driven action
+  buttons (Assign/Start/Complete/Resume/Generate Invoice/Put On Hold/Cancel,
+  each gated on the current status) over Overview / Labor & Parts / Notes &
+  Attachments / Timeline tabs, plus a right rail (customer contact + open-WO/
+  spend stats, assigned technician, quick facts). Labor/parts lines and notes
+  use real React Hook Form + Zod add-flows with live-recalculated subtotals;
+  Assign/Reassign opens a technician-picker `Drawer` reusing the Schedule
+  module's `TECHNICIANS` list. `src/lib/dummy-data/work-order-detail.ts` hand-
+  curates one fully-detailed "hero" work order (WO-2024-00318) for the
+  portfolio screenshot and derives a plausible-but-simpler detail view for
+  every other row from its own table fields, so every link in the table/
+  Kanban/mobile-list leads somewhere real. Added `not-found.tsx` for the
+  `(app)` route group so an invalid work-order id 404s inside the app shell
+  instead of falling through to the bare framework default.
+- **Two real bugs found and fixed during verification, both pre-existing in
+  the last commit (not introduced by this screen) and invisible in a static
+  screenshot:**
+  1. `next build` failed on *every* `(app)` page with "Slot failed to slot
+     onto its children" — `Button`'s `asChild` mode rendered two children
+     into Radix's `Slot` (`{loading ? <Loader2/> : null}` followed by
+     `{children}`), and Slot requires exactly one. Only surfaced once
+     something in the codebase actually used `<Button asChild>` (the new
+     `not-found.tsx`, wrapping a `Link`) — every earlier hero screen happened
+     to avoid that combination. Fixed by only rendering the loading-spinner
+     branch when `!asChild`, so Slot always receives exactly `children`.
+  2. Labor/parts subtotals used bare `.toLocaleString()` on `hours × rate`
+     figures, which renders `$142.5` instead of `$142.50` whenever the result
+     isn't a whole dollar amount (e.g. 1.5 hours × $95/hr) — never noticed on
+     other screens because their dummy `total` fields all happen to be
+     pre-rounded integers. Fixed with a shared `formatMoney()` helper
+     (`minimumFractionDigits`/`maximumFractionDigits: 2`) used across all five
+     money figures in `wo-labor-parts-tab.tsx`.
+- Also reverted an unrelated in-progress, uncommitted experiment in
+  `src/app/layout.tsx` that had swapped the anti-FOUC theme-init script from
+  a raw `<script dangerouslySetInnerHTML>` in `<head>` to a `next/script`
+  `beforeInteractive` component in `<body>` — the swap produced a real (if
+  dev-only) console warning on the not-found path. Confirmed via
+  `node_modules/next/dist/docs/01-app/02-guides/preventing-flash-before-hydration.md`
+  that the original raw-`<script>`-in-`<head>` pattern is this Next.js
+  version's documented, correct approach for anti-FOUC scripts; applied that
+  doc's `type="text/javascript"` (server) / `type="text/plain"` (client) +
+  `suppressHydrationWarning` refinement on top, which is the documented fix
+  for React's dev-mode "rendering produces `<script>` tags" warning.
+- Verified via full production build (19 routes, zero type errors — 18
+  static, `/work-orders/[id]` correctly dynamic) and headless Playwright
+  across desktop (1440px)/tablet (768px)/mobile (390px) and both themes: tab
+  switching, add/remove labor and parts with live subtotal recalculation,
+  posting a note, assigning and reassigning a technician, every status-change
+  button, and the invalid-id 404 path — against both the hand-curated hero
+  record and a plain derived one, not just the hero screenshot.
 
 ## What's next
 
-1. Phase 2: the remaining 3 hero screens — Work Orders, Work Order Details,
-   Technician Mobile View.
+1. Phase 2: the last hero screen — Technician Mobile View.
 2. Housekeeping: back-port three implementation-driven additions into the docs
    so they match code — `docs/COLOR_SYSTEM.md` needs the `--primary`/`--primary-text`
    split and the `--chip-bg`/`--chip-text` pair (both explained inline in

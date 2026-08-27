@@ -26,7 +26,7 @@ config is needed beyond documenting intent.
 | Sidebar width (expanded) | 260px |
 | Sidebar width (collapsed / icon rail) | 72px |
 | Header height | 64px |
-| Page content max-width | none (fluid) — content area uses full remaining width with `space-6` (24px) outer padding |
+| Page content max-width | 1600px, centered (`mx-auto`) below that width the content area just uses the full remaining width. Applied once at the `(app)` layout level so every page gets it automatically — individual pages don't each need their own cap. Prevents the KPI/grid-based pages from stretching into oversized cards on ultra-wide monitors (2xl+), per the 2xl row below. |
 | Page padding (desktop) | 24px |
 | Page padding (mobile) | 16px |
 | Section spacing (between card groups) | 24px |

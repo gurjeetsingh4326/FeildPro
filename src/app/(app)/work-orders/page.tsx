@@ -1,12 +1,5 @@
-import { ClipboardList } from "lucide-react";
-import { PlaceholderPage } from "@/components/layout/placeholder-page";
+import { WorkOrdersLoader } from "@/components/work-orders/work-orders-loader";
 
 export default function WorkOrdersPage() {
-  return (
-    <PlaceholderPage
-      icon={ClipboardList}
-      title="Work Orders"
-      description="Table and Kanban views of every work order — customer, service, priority, status, technician, schedule. One of the 5 portfolio hero screens, coming in Phase 2."
-    />
-  );
+  return <WorkOrdersLoader />;
 }

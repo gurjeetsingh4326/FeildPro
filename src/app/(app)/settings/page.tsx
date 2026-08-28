@@ -1,12 +1,5 @@
-import { Settings } from "lucide-react";
-import { PlaceholderPage } from "@/components/layout/placeholder-page";
+import { SettingsView } from "@/components/settings/settings-view";
 
 export default function SettingsPage() {
-  return (
-    <PlaceholderPage
-      icon={Settings}
-      title="Settings"
-      description="Company profile, preferences, and configuration. Coming in Phase 4."
-    />
-  );
+  return <SettingsView />;
 }

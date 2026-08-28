@@ -6,10 +6,11 @@ the full phased checklist this rolls up from.
 
 ## Current phase
 
-**Phase 0 through Phase 3 are complete.** All 5 portfolio hero screens and
-all 7 Phase 3 modules (Customers, Technicians, Services, Parts & Inventory,
-Invoices, Payments, Reports) are built and verified. Phase 4
-(Administration) is next.
+**Phase 0 through Phase 3 are complete; Phase 4 is underway.** All 5
+portfolio hero screens and all 7 Phase 3 modules are built and verified.
+Users & Roles and Settings (the first 2 of 4 Phase 4 items) are done. 2
+items remain: an empty/loading/error state pass across every screen, and a
+full responsive pass on the non-hero screens.
 
 ## Last updated
 
@@ -618,11 +619,48 @@ Invoices, Payments, Reports) are built and verified. Phase 4
     dollar-sign fix didn't drop a `$` or break formatting anywhere else in
     the app — zero regression to any of the other 11 modules/hero screens.
 
+- Built Users & Roles and Settings — the first two Phase 4 (Administration)
+  items.
+  - **Users & Roles** (`/users`): a Users tab (search/role filter/status
+    filter/sort/paginate/Invite User) with a per-row actions menu for
+    changing role inline and suspending/reactivating an account — suspend
+    routes through a `ConfirmDialog` first (destructive per
+    `docs/UI_PATTERNS.md`), reactivate doesn't (reversible, low-stakes). New
+    `src/lib/dummy-data/users.ts` seeds the roster from the 4 canonical
+    `DUMMY_USERS` in `roles.ts` (the ones the header/role switcher already
+    use) plus 7 more across the 4 roles, so switching roles in dev always
+    corresponds to a real row here. A second tab, **Role Permissions**, is a
+    read-only matrix (section × role) computed directly from
+    `nav-config.ts`'s `isNavItemVisible()` — the exact function that decides
+    real sidebar visibility — so the "and their permissions" part of the
+    module's own placeholder description is answered from the real access
+    rules instead of a separately hand-typed table that could drift from
+    them.
+  - **Settings** (`/settings`): Company Profile / Preferences / Notifications
+    tabs, each an independently-submittable form (React Hook Form + Zod).
+    Added a new `Switch` primitive (`src/components/ui/switch.tsx`, wrapping
+    `@radix-ui/react-switch` — the same "new Radix primitive per new
+    interactive need" pattern as Collapsible for the Technician Mobile job
+    view) for the Notifications tab's toggles. Preferences' defaults
+    (labor rate $95, tax rate 8%, payment terms 30 days) were deliberately
+    set to match values already hardcoded elsewhere in the app (Work Order
+    labor lines' `RATE` constant, the Sunrise Senior Living invoice's tax
+    example, New Invoice's due-date math) — Settings doesn't yet *drive*
+    those values (no backend to read from until Phase 6), but describing a
+    different default than what the rest of the app actually uses would
+    have been an obvious, avoidable inconsistency.
+  - Verified via full production build (22 routes) and headless Playwright
+    in both themes and at mobile width: search/filter/sort on Users, an
+    inline role change, the full suspend-with-confirmation flow, inviting a
+    user, the Role Permissions matrix, all three Settings tabs (including
+    the labor-rate default and a Switch toggle actually changing state),
+    and a full regression sweep — zero impact on any of the other 13
+    modules/hero screens.
+
 ## What's next
 
-1. Phase 4 (Administration): Users & Roles, Settings, an empty/loading/error
-   state pass across every screen, and a full responsive pass on the
-   non-hero screens.
+1. Phase 4 (Administration): an empty/loading/error state pass across every
+   screen, and a full responsive pass on the non-hero screens.
 2. Housekeeping: run `npm run lint` and clean up the 6 pre-existing errors it
    surfaces (see note above) — not blocking, but worth doing before Phase 4
    adds more surface area.

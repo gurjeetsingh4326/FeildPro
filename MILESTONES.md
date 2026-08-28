@@ -123,8 +123,22 @@ for granular day-to-day status).
 
 ## Phase 4 — Administration
 
-- [ ] Users & Roles
-- [ ] Settings
+- [x] Users & Roles — user list (search/role filter/status filter/sort/
+  paginate/Invite User) with inline role change and a suspend/reactivate
+  flow (suspend routes through a confirmation dialog, per
+  `docs/UI_PATTERNS.md`), plus a Role Permissions tab: a matrix computed
+  directly from `nav-config.ts`'s existing per-role access lists (the same
+  data that drives the sidebar), so it can never drift from what each role
+  can actually see. The 4 canonical `DUMMY_USERS` (used by the header/role
+  switcher) anchor the roster so switching roles in dev always corresponds
+  to a real row.
+- [x] Settings — Company Profile / Preferences / Notifications tabs. Added a
+  new `Switch` primitive (`@radix-ui/react-switch`) for the Notifications
+  tab's toggles. Preferences' defaults (labor rate, tax rate, payment terms)
+  match the values already hardcoded elsewhere in the app (Work Order labor
+  lines, the Sunrise Senior Living invoice example, New Invoice's due-date
+  math) so the page reads as describing real app behavior, not placeholder
+  content.
 - [ ] Empty/loading/error state pass across every screen
 - [ ] Full responsive pass (tablet/mobile) across non-hero screens
 

@@ -72,7 +72,17 @@ for granular day-to-day status).
   Verified functionally (search/filter/sort/create/edit, the New Work Order
   integration) across breakpoints and both themes, plus a full production
   build.
-- [ ] Parts & Inventory
+- [x] Parts & Inventory — Parts is a catalog (SKU, category, unit price)
+  matching the Services list+inline-edit pattern; Inventory tracks stock per
+  part per warehouse across two tabs (Stock Levels — with In Stock/Low
+  Stock/Out of Stock status derived from `quantityOnHand` vs
+  `reorderThreshold`, not hand-typed — and Transactions, a running log) with
+  an Adjust Stock modal (received/used/adjusted/transferred) that updates
+  both. Work Order Details' "Add Part" flow now picks from this catalog
+  (auto-filling SKU/price) instead of free-text entry. Verified functionally
+  (search/filter/sort, stock adjustment updating both tabs live, the Add
+  Part catalog integration) across breakpoints and both themes, plus a full
+  production build.
 - [ ] Invoices
 - [ ] Payments
 - [ ] Reports (revenue, WO stats, technician performance, utilization, resolution time, FTF rate, CSAT, outstanding invoices)

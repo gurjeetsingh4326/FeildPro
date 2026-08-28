@@ -8,8 +8,8 @@ the full phased checklist this rolls up from.
 
 **Phase 0, Phase 1, and Phase 2 are complete; Phase 3 is underway** — all 5
 portfolio hero screens are built and verified, and Customers, Technicians,
-and Services (the first 3 Phase 3 modules) are done. 4 Phase 3 modules
-remain: Parts & Inventory, Invoices, Payments, Reports.
+Services, and Parts & Inventory (the first 4 Phase 3 modules) are done.
+3 Phase 3 modules remain: Invoices, Payments, Reports.
 
 ## Last updated
 
@@ -464,10 +464,39 @@ remain: Parts & Inventory, Invoices, Payments, Reports.
     list now reflects the catalog — with zero regression to Work Orders,
     Customers, Technicians, or the Technician Mobile View.
 
+- Built the Parts & Inventory module — the fourth Phase 3 module, split into
+  two related but distinct pages sharing one dummy-data module.
+  - **Parts** (`/parts`): a catalog (SKU, category, unit price) — same list +
+    inline-edit-modal shape as Services, since a part is a similar kind of
+    catalog entity (no relationships/history of its own).
+  - **Inventory** (`/inventory`): stock per part per warehouse (2 warehouses)
+    across two tabs. **Stock Levels** shows on-hand/reorder-threshold with an
+    In Stock/Low Stock/Out of Stock status computed from those two numbers
+    (`stockStatusFor()`), not hand-typed — applying the "compute from source
+    data" discipline from Customers/Technicians a third time. **Transactions**
+    is a running log (received/used/adjusted/transferred) filterable by the
+    same warehouse chips as Stock Levels. An **Adjust Stock** modal writes to
+    both: it appends a transaction and updates the corresponding level's
+    `quantityOnHand` in the same state update, so the two tabs can never
+    drift apart from each other in the UI.
+  - Also refactored Work Order Details' "Add Part" flow
+    (`wo-labor-parts-tab.tsx`) from free-text part name/SKU entry to a Select
+    sourced from the new Parts catalog, auto-filling SKU and unit price on
+    selection (quantity and price both stay editable after) — the same
+    "wire the new module back into Work Order Details" pattern already
+    applied for Customer and Technician "View profile" links and the
+    Services-sourced New Work Order dropdown.
+  - Verified via full production build (22 routes) and headless Playwright
+    in both themes: search/filter/sort/create/edit on Parts, both Inventory
+    tabs, an end-to-end stock adjustment (confirmed the transaction appeared
+    in the log AND the on-hand count updated in Stock Levels from the same
+    action), and the Add Part catalog dropdown including its price auto-fill
+    — with zero regression to Work Orders, Work Order Details, Customers,
+    Technicians, Services, or the Technician Mobile View.
+
 ## What's next
 
-1. Phase 3: the remaining modules — Parts & Inventory, Invoices, Payments,
-   Reports.
+1. Phase 3: the remaining modules — Invoices, Payments, Reports.
 2. Housekeeping: run `npm run lint` and clean up the 6 pre-existing errors it
    surfaces (see note above) — not blocking, but worth doing before Phase 3
    adds more surface area.

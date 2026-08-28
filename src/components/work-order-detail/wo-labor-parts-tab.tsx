@@ -24,7 +24,10 @@ import {
   ModalFooter,
 } from "@/components/ui/modal";
 import { TECHNICIANS } from "@/lib/dummy-data/schedule";
+import { PARTS, getPart } from "@/lib/dummy-data/parts";
 import type { LaborLine, PartLine } from "@/lib/dummy-data/work-order-detail";
+
+const ACTIVE_PARTS = PARTS.filter((p) => p.status === "active");
 
 export function formatMoney(value: number) {
   return value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -39,8 +42,7 @@ const laborSchema = z.object({
 type LaborValues = z.infer<typeof laborSchema>;
 
 const partSchema = z.object({
-  partName: z.string().min(1, "Enter a part name"),
-  sku: z.string().min(1, "Enter a SKU"),
+  partId: z.string().min(1, "Select a part"),
   quantity: z.coerce.number().int().positive("Enter a quantity"),
   unitPrice: z.coerce.number().positive("Enter a unit price"),
 });
@@ -118,13 +120,15 @@ export function AddLaborModal({ open, onOpenChange, onAdd }: { open: boolean; on
 }
 
 export function AddPartModal({ open, onOpenChange, onAdd }: { open: boolean; onOpenChange: (v: boolean) => void; onAdd: (line: PartLine) => void }) {
-  const { register, handleSubmit, reset, formState: { errors } } = useForm({
+  const { register, control, handleSubmit, setValue, reset, formState: { errors } } = useForm({
     resolver: zodResolver(partSchema),
-    defaultValues: { partName: "", sku: "", quantity: 1, unitPrice: 0 },
+    defaultValues: { partId: "", quantity: 1, unitPrice: 0 },
   });
 
   const onSubmit = (values: PartValues) => {
-    onAdd({ id: `part-${Date.now()}`, ...values });
+    const part = getPart(values.partId);
+    if (!part) return;
+    onAdd({ id: `part-${Date.now()}`, partName: part.name, sku: part.sku, quantity: values.quantity, unitPrice: values.unitPrice });
     reset();
     onOpenChange(false);
   };
@@ -138,14 +142,33 @@ export function AddPartModal({ open, onOpenChange, onAdd }: { open: boolean; onO
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <ModalBody className="space-y-4">
             <div>
-              <Label htmlFor="part-name">Part name</Label>
-              <Input id="part-name" error={!!errors.partName} {...register("partName")} />
-              {errors.partName ? <FieldError>{errors.partName.message}</FieldError> : null}
-            </div>
-            <div>
-              <Label htmlFor="part-sku">SKU</Label>
-              <Input id="part-sku" error={!!errors.sku} {...register("sku")} />
-              {errors.sku ? <FieldError>{errors.sku.message}</FieldError> : null}
+              <Label htmlFor="part-id">Part</Label>
+              <Controller
+                control={control}
+                name="partId"
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    onValueChange={(v) => {
+                      field.onChange(v);
+                      const part = getPart(v);
+                      if (part) setValue("unitPrice", part.unitPrice);
+                    }}
+                  >
+                    <SelectTrigger id="part-id" className={errors.partId ? "border-error" : undefined}>
+                      <SelectValue placeholder="Select a part" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {ACTIVE_PARTS.map((p) => (
+                        <SelectItem key={p.id} value={p.id}>
+                          {p.name} · {p.sku}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.partId ? <FieldError>{errors.partId.message}</FieldError> : null}
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>

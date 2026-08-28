@@ -96,7 +96,17 @@ for granular day-to-day status).
   transitions, the overdue banner, tax/discount math, all cross-module
   deep links, bad-id 404) across breakpoints and both themes, plus a full
   production build.
-- [ ] Payments
+- [x] Payments — list-only (`/payments`, search/status filter/method
+  filter/sort/paginate/Record Payment), matching the Services/Parts lighter
+  scope since a payment doesn't need its own detail page. One payment per
+  already-paid invoice (kept in sync via a shared source), plus pending/
+  refunded/failed examples for status variety. The Record Payment form only
+  offers sent/overdue invoices and auto-fills the amount from the invoice
+  total. Invoice Detail's right rail now shows a Payments card for any
+  invoice with a recorded payment. Verified functionally
+  (search/filter/sort/create, the amount auto-fill, the Invoice ↔ Payments
+  cross-link) across breakpoints and both themes, plus a full production
+  build.
 - [ ] Reports (revenue, WO stats, technician performance, utilization, resolution time, FTF rate, CSAT, outstanding invoices)
 
 ## Phase 4 — Administration

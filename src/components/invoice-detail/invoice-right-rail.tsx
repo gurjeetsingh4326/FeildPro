@@ -1,7 +1,9 @@
 import Link from "next/link";
-import { Calendar, ClipboardList } from "lucide-react";
+import { Calendar, ClipboardList, CreditCard } from "lucide-react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { getCustomerByName } from "@/lib/dummy-data/customers";
+import { getPaymentsForInvoice, PAYMENT_METHOD_META, PAYMENT_STATUS_META } from "@/lib/dummy-data/payments";
 import type { Invoice } from "@/lib/dummy-data/invoices";
 
 function formatDate(iso: string) {
@@ -12,6 +14,7 @@ function formatDate(iso: string) {
 
 export function InvoiceRightRail({ invoice }: { invoice: Invoice }) {
   const customer = getCustomerByName(invoice.customerName);
+  const payments = getPaymentsForInvoice(invoice.id);
 
   return (
     <div className="space-y-4">
@@ -39,6 +42,34 @@ export function InvoiceRightRail({ invoice }: { invoice: Invoice }) {
             <ClipboardList className="size-4 shrink-0" />
             {invoice.workOrderId}
           </Link>
+        </Card>
+      ) : null}
+
+      {payments.length > 0 ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>Payments</CardTitle>
+            <Link href="/payments" className="text-[13px] font-medium text-primary-text hover:underline">
+              View all
+            </Link>
+          </CardHeader>
+          <ul className="space-y-2.5">
+            {payments.map((p) => {
+              const statusMeta = PAYMENT_STATUS_META[p.status];
+              return (
+                <li key={p.id} className="flex items-center justify-between gap-2 text-[13px]">
+                  <span className="flex items-center gap-1.5 text-text-secondary">
+                    <CreditCard className="size-3.5 shrink-0 text-text-muted" />
+                    {PAYMENT_METHOD_META[p.method].label}
+                  </span>
+                  <span className="tabular-nums font-medium text-text-primary">${p.amount.toLocaleString()}</span>
+                  <Badge variant={statusMeta.badge} dot>
+                    {statusMeta.label}
+                  </Badge>
+                </li>
+              );
+            })}
+          </ul>
         </Card>
       ) : null}
 

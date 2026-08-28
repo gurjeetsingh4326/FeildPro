@@ -8,8 +8,8 @@ the full phased checklist this rolls up from.
 
 **Phase 0, Phase 1, and Phase 2 are complete; Phase 3 is underway** — all 5
 portfolio hero screens are built and verified, and Customers, Technicians,
-Services, Parts & Inventory, and Invoices (the first 5 Phase 3 modules) are
-done. 2 Phase 3 modules remain: Payments, Reports.
+Services, Parts & Inventory, Invoices, and Payments (the first 6 Phase 3
+modules) are done. 1 Phase 3 module remains: Reports.
 
 ## Last updated
 
@@ -539,9 +539,37 @@ done. 2 Phase 3 modules remain: Payments, Reports.
     — with zero regression to Work Orders, Work Order Details, Customers,
     Technicians, Services, Parts & Inventory, or the Technician Mobile View.
 
+- Built the Payments module — the sixth Phase 3 module, list-only like
+  Services/Parts since a payment record doesn't need its own detail page
+  (amount, method, date, status — nothing that needs tabs).
+  - New `src/lib/dummy-data/payments.ts` generates one `completed` payment
+    per invoice in `invoices.ts` that already has `status: "paid"`, from the
+    same source array rather than a separately hand-typed list, so the two
+    modules can't disagree about which invoices are actually settled. Added
+    three more (`pending`, `refunded`, `failed`) against existing invoices
+    for status variety in the list/filters.
+  - **List** (`/payments`): search/status filter/method filter/sort (date,
+    amount)/paginate/Record Payment, matching the established list
+    skeleton; each row's invoice number links to `/invoices/[id]`.
+  - The Record Payment form only offers invoices with `status: "sent"` or
+    `"overdue"` (paying an already-paid or still-draft invoice isn't a
+    real action) and auto-fills the amount from that invoice's total on
+    selection, the same auto-fill pattern used for Add Part's unit price.
+  - Wired back into Invoice Detail: the right rail now shows a Payments
+    card (method/amount/status per payment) for any invoice with at least
+    one recorded payment, with a "View all" link to `/payments` — the same
+    "new module links back into what already exists" pattern followed for
+    every module this phase.
+  - Verified via full production build (24 routes — no new dynamic route)
+    and headless Playwright in both themes: search/filter/sort/create, the
+    amount auto-fill, the payment → invoice link, and the new Invoice
+    Detail → Payments card — with zero regression to Work Orders, Work
+    Order Details, Customers, Technicians, Services, Parts & Inventory,
+    Invoices, or the Technician Mobile View.
+
 ## What's next
 
-1. Phase 3: the remaining modules — Payments, Reports.
+1. Phase 3: the last remaining module — Reports.
 2. Housekeeping: run `npm run lint` and clean up the 6 pre-existing errors it
    surfaces (see note above) — not blocking, but worth doing before Phase 3
    adds more surface area.

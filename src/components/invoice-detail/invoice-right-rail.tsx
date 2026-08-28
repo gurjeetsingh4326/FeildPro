@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { getCustomerByName } from "@/lib/dummy-data/customers";
 import { getPaymentsForInvoice, PAYMENT_METHOD_META, PAYMENT_STATUS_META } from "@/lib/dummy-data/payments";
 import type { Invoice } from "@/lib/dummy-data/invoices";
+import { formatMoney } from "@/lib/utils";
 
 function formatDate(iso: string) {
   const [y, m, d] = iso.split("-");
@@ -62,7 +63,7 @@ export function InvoiceRightRail({ invoice }: { invoice: Invoice }) {
                     <CreditCard className="size-3.5 shrink-0 text-text-muted" />
                     {PAYMENT_METHOD_META[p.method].label}
                   </span>
-                  <span className="tabular-nums font-medium text-text-primary">${p.amount.toLocaleString()}</span>
+                  <span className="tabular-nums font-medium text-text-primary">${formatMoney(p.amount)}</span>
                   <Badge variant={statusMeta.badge} dot>
                     {statusMeta.label}
                   </Badge>

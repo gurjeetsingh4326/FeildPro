@@ -6,14 +6,14 @@ the full phased checklist this rolls up from.
 
 ## Current phase
 
-**Phase 0, Phase 1, and Phase 2 are complete; Phase 3 is underway** — all 5
-portfolio hero screens are built and verified, and Customers, Technicians,
-Services, Parts & Inventory, Invoices, and Payments (the first 6 Phase 3
-modules) are done. 1 Phase 3 module remains: Reports.
+**Phase 0 through Phase 3 are complete.** All 5 portfolio hero screens and
+all 7 Phase 3 modules (Customers, Technicians, Services, Parts & Inventory,
+Invoices, Payments, Reports) are built and verified. Phase 4
+(Administration) is next.
 
 ## Last updated
 
-2026-08-27
+2026-08-28
 
 ## What's done
 
@@ -567,11 +567,64 @@ modules) are done. 1 Phase 3 module remains: Reports.
     Order Details, Customers, Technicians, Services, Parts & Inventory,
     Invoices, or the Technician Mobile View.
 
+- Built the Reports module — the seventh and last Phase 3 module, completing
+  Phase 3. A single analytics page rather than a CRUD list/detail, so it
+  reuses two Dashboard widgets outright (`RevenueTrendCard`,
+  `OutstandingInvoicesCard` — no props, drop-in) alongside three new pieces:
+  a Work Order Status donut chart (flat fills from the fixed `--chart-1`…
+  `--chart-5` data-viz sequence, center label = total, per
+  `docs/DASHBOARD_DESIGN.md`'s chart rules), an Avg. Resolution Time bar
+  chart, and a Technician Performance table (all 6 technicians, reusing
+  `getTechnicianStats()`). A 6-tile KPI row covers the rest: Revenue (90d),
+  Work Orders Completed, Avg. Resolution, First-Time Fix Rate, CSAT Score,
+  Outstanding Invoices.
+  - Every number that has real underlying data is computed fresh in the new
+    `src/lib/dummy-data/reports.ts` from `WORK_ORDERS`/`INVOICES`/
+    `TECHNICIANS` (revenue, WO counts, status breakdown, outstanding total,
+    per-technician stats) rather than hand-typed — the "compute from source"
+    discipline applied consistently since Customers. First-Time Fix Rate and
+    CSAT have no underlying tracked model yet, so those two are hand-picked,
+    same as Technician on-time-rate/rating; the resolution-time trend's last
+    data point was deliberately set to match the Dashboard KPI card's
+    existing "Avg. Resolution: 3.4h" so the two pages agree.
+  - **Found and fixed a real, systemic, pre-existing bug while building
+    this page**: `REVENUE (90D)` rendered as `$9,51,700` instead of
+    `$951,700` — Indian-style digit grouping. The cause: every currency
+    figure in the app called bare `.toLocaleString()`, which uses the
+    *runtime's* default locale rather than a fixed one — fine on a browser
+    set to en-US, but this component is server-rendered, and the server's
+    reported locale produced Indian-style grouping for any value ≥ 100,000.
+    Every other currency figure in the app had stayed under that threshold
+    by coincidence, so this was invisible until Reports' first 6-figure
+    total. Fixed with a shared `formatMoney()` helper in `src/lib/utils.ts`
+    (always passes `"en-US"` explicitly) and applied it across all 26
+    call sites in the codebase, not just the one that surfaced it — a
+    grep-driven sweep, each replacement verified individually rather than
+    trusted blindly (a first-pass scripted replacement introduced its own
+    bug, silently dropping the literal `$` in 9 of those call sites because
+    `String.replace()` treats a literal `$$` in the *replacement* string as
+    an escape for a single `$`; caught by grepping for the resulting
+    `` `${formatMoney`` `` pattern with no leading `$`, and fixed by hand).
+  - Also fixed a second, smaller real bug spotted in the same review pass:
+    the Avg. Resolution Time bar chart's Y-axis labels were clipped (showing
+    `.85h` instead of `2.85h`) because the axis's reserved width (32px) was
+    too narrow for a 5-character tick label — widened to 40px and the
+    tick formatter rounded to 1 decimal.
+  - Verified via full production build (22 routes) and headless Playwright
+    in both themes and at mobile width: every KPI figure, both reused
+    Dashboard widgets still functioning (range toggle, row links), the new
+    donut/bar charts, the Technician Performance table's links back to
+    `/technicians/[id]`, and a full 26-file regression sweep confirming the
+    dollar-sign fix didn't drop a `$` or break formatting anywhere else in
+    the app — zero regression to any of the other 11 modules/hero screens.
+
 ## What's next
 
-1. Phase 3: the last remaining module — Reports.
+1. Phase 4 (Administration): Users & Roles, Settings, an empty/loading/error
+   state pass across every screen, and a full responsive pass on the
+   non-hero screens.
 2. Housekeeping: run `npm run lint` and clean up the 6 pre-existing errors it
-   surfaces (see note above) — not blocking, but worth doing before Phase 3
+   surfaces (see note above) — not blocking, but worth doing before Phase 4
    adds more surface area.
 3. Housekeeping: back-port three implementation-driven additions into the docs
    so they match code — `docs/COLOR_SYSTEM.md` needs the `--primary`/`--primary-text`

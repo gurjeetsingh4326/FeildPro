@@ -1,4 +1,5 @@
 import type { InvoiceStatus } from "@/lib/types";
+import { formatMoney } from "@/lib/utils";
 
 /** Same fictional "today" used throughout the dummy data (schedule.ts). */
 const TODAY_ISO = "2026-08-26";
@@ -256,7 +257,7 @@ export function getInvoiceTimeline(invoice: Invoice): InvoiceTimelineEntry[] {
     entries.push({
       id: `${invoice.id}-tl-3`,
       actorName: invoice.customerName,
-      description: `paid this invoice ($${invoiceTotal(invoice).toLocaleString()})`,
+      description: `paid this invoice ($${formatMoney(invoiceTotal(invoice))})`,
       timestamp: invoice.paidDate,
     });
   }

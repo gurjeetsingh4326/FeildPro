@@ -2,6 +2,7 @@ import { Phone, Mail, MapPin } from "lucide-react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Customer, CustomerStats } from "@/lib/dummy-data/customers";
 import { getPrimaryAddress, getPrimaryContact } from "@/lib/dummy-data/customers";
+import { formatMoney } from "@/lib/utils";
 
 function formatDate(iso: string) {
   const [y, m, d] = iso.split("-");
@@ -25,7 +26,7 @@ export function CustomerRightRail({ customer, stats }: { customer: Customer; sta
             <p className="text-[12px] text-text-muted">Open work orders</p>
           </div>
           <div>
-            <p className="text-lg font-bold text-text-primary">${stats.totalSpend.toLocaleString()}</p>
+            <p className="text-lg font-bold text-text-primary">${formatMoney(stats.totalSpend)}</p>
             <p className="text-[12px] text-text-muted">Total spend</p>
           </div>
           <div>

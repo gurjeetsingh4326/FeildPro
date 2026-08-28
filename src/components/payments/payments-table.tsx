@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { PAYMENT_METHOD_META, PAYMENT_STATUS_META, type Payment } from "@/lib/dummy-data/payments";
+import { formatMoney } from "@/lib/utils";
 
 export type SortColumn = "date" | "amount" | null;
 
@@ -68,7 +69,7 @@ export function PaymentsTable({ payments, sortColumn, sortDirection, onSort }: P
                 </Badge>
               </TableCell>
               <TableCell className="text-text-secondary">{formatDate(payment.date)}</TableCell>
-              <TableCell className="text-right tabular-nums font-medium">${payment.amount.toLocaleString()}</TableCell>
+              <TableCell className="text-right tabular-nums font-medium">${formatMoney(payment.amount)}</TableCell>
             </TableRow>
           );
         })}

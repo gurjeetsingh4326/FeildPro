@@ -13,11 +13,12 @@ import {
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsPillList, TabsPillTrigger } from "@/components/ui/tabs";
 import { REVENUE_TREND } from "@/lib/dummy-data/dashboard";
+import { formatMoney } from "@/lib/utils";
 
 type Range = "7d" | "30d" | "90d";
 
 function formatCurrency(value: number) {
-  return `$${value.toLocaleString()}`;
+  return `$${formatMoney(value)}`;
 }
 
 function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: { value: number }[]; label?: string }) {

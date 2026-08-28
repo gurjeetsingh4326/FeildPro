@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { INVOICE_STATUS_META, invoiceTotal, type Invoice } from "@/lib/dummy-data/invoices";
 import type { InvoiceStatus } from "@/lib/types";
+import { formatMoney } from "@/lib/utils";
 
 export interface InvoiceDetailHeaderProps {
   invoice: Invoice;
@@ -32,7 +33,7 @@ export function InvoiceDetailHeader({ invoice, onStatusChange }: InvoiceDetailHe
             </Badge>
           </div>
           <p className="mt-1 text-2xl font-bold tracking-tight text-text-primary">{invoice.customerName}</p>
-          <p className="tabular-nums text-sm text-text-secondary">${invoiceTotal(invoice).toLocaleString()}</p>
+          <p className="tabular-nums text-sm text-text-secondary">${formatMoney(invoiceTotal(invoice))}</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">

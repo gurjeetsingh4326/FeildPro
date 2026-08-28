@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import type { Service } from "@/lib/dummy-data/services";
+import { formatMoney } from "@/lib/utils";
 
 export type SortColumn = "basePrice" | "estimatedHours" | null;
 
@@ -55,7 +56,7 @@ export function ServicesTable({ services, sortColumn, sortDirection, onSort, onE
             </TableCell>
             <TableCell className="text-text-secondary">{service.category}</TableCell>
             <TableCell className="tabular-nums text-text-secondary">{service.estimatedHours}h</TableCell>
-            <TableCell className="text-right tabular-nums font-medium">${service.basePrice.toLocaleString()}</TableCell>
+            <TableCell className="text-right tabular-nums font-medium">${formatMoney(service.basePrice)}</TableCell>
             <TableCell>
               <Badge variant={service.status === "active" ? "success" : "neutral"} dot>
                 {service.status === "active" ? "Active" : "Inactive"}

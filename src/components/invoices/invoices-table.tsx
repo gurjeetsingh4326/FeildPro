@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { INVOICE_STATUS_META, invoiceTotal, type Invoice } from "@/lib/dummy-data/invoices";
+import { formatMoney } from "@/lib/utils";
 
 export type SortColumn = "dueDate" | "amount" | null;
 
@@ -67,7 +68,7 @@ export function InvoicesTable({ invoices, sortColumn, sortDirection, onSort }: I
               <TableCell className="text-text-secondary">{formatDate(invoice.issueDate)}</TableCell>
               <TableCell className="text-text-secondary">{formatDate(invoice.dueDate)}</TableCell>
               <TableCell className="text-right tabular-nums font-medium">
-                ${invoiceTotal(invoice).toLocaleString()}
+                ${formatMoney(invoiceTotal(invoice))}
               </TableCell>
             </TableRow>
           );

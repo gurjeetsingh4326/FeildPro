@@ -4,6 +4,7 @@ import { Badge, PriorityBadge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
 import { STATUS_META } from "@/lib/work-order-status";
 import type { WorkOrder } from "@/lib/dummy-data/work-orders";
+import { formatMoney } from "@/lib/utils";
 
 function formatDate(iso: string) {
   const [, m, d] = iso.split("-");
@@ -42,7 +43,7 @@ export function WorkOrdersMobileList({ workOrders }: { workOrders: WorkOrder[] }
                 {meta.label}
               </Badge>
               <span className="tabular-nums text-sm font-medium text-text-primary">
-                {wo.total > 0 ? `$${wo.total.toLocaleString()}` : <span className="text-text-muted">—</span>}
+                {wo.total > 0 ? `$${formatMoney(wo.total)}` : <span className="text-text-muted">—</span>}
               </span>
             </div>
             <div className="mt-2 flex items-center justify-between gap-2 border-t border-border pt-2">

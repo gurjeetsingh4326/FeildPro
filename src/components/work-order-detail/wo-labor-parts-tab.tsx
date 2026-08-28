@@ -25,12 +25,13 @@ import {
 } from "@/components/ui/modal";
 import { TECHNICIANS } from "@/lib/dummy-data/schedule";
 import { PARTS, getPart } from "@/lib/dummy-data/parts";
+import { formatMoney as formatMoneyLocale } from "@/lib/utils";
 import type { LaborLine, PartLine } from "@/lib/dummy-data/work-order-detail";
 
 const ACTIVE_PARTS = PARTS.filter((p) => p.status === "active");
 
 export function formatMoney(value: number) {
-  return value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return formatMoneyLocale(value, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 const laborSchema = z.object({

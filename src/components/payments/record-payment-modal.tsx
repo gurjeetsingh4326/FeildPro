@@ -27,6 +27,7 @@ import {
 import { toast } from "@/lib/toast-bus";
 import { INVOICES, getInvoice, invoiceTotal } from "@/lib/dummy-data/invoices";
 import { PAYMENT_METHOD_META, type Payment, type PaymentMethod } from "@/lib/dummy-data/payments";
+import { formatMoney } from "@/lib/utils";
 
 const PAYABLE_INVOICES = INVOICES.filter((inv) => inv.status === "sent" || inv.status === "overdue");
 
@@ -111,7 +112,7 @@ export function RecordPaymentModal({ onCreate, nextId }: RecordPaymentModalProps
                     <SelectContent>
                       {PAYABLE_INVOICES.map((inv) => (
                         <SelectItem key={inv.id} value={inv.id}>
-                          {inv.id} · {inv.customerName} · ${invoiceTotal(inv).toLocaleString()}
+                          {inv.id} · {inv.customerName} · ${formatMoney(invoiceTotal(inv))}
                         </SelectItem>
                       ))}
                     </SelectContent>

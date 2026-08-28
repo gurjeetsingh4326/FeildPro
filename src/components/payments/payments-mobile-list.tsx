@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { PAYMENT_METHOD_META, PAYMENT_STATUS_META, type Payment } from "@/lib/dummy-data/payments";
+import { formatMoney } from "@/lib/utils";
 
 function formatDate(iso: string) {
   const [, m, d] = iso.split("-");
@@ -36,7 +37,7 @@ export function PaymentsMobileList({ payments }: { payments: Payment[] }) {
                 {payment.invoiceId}
               </Link>
               <span>{formatDate(payment.date)}</span>
-              <span className="tabular-nums text-sm font-medium text-text-primary">${payment.amount.toLocaleString()}</span>
+              <span className="tabular-nums text-sm font-medium text-text-primary">${formatMoney(payment.amount)}</span>
             </div>
           </li>
         );

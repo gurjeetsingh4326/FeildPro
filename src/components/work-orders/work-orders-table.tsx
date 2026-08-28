@@ -15,6 +15,7 @@ import { Badge, PriorityBadge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
 import { STATUS_META } from "@/lib/work-order-status";
 import type { WorkOrder } from "@/lib/dummy-data/work-orders";
+import { formatMoney } from "@/lib/utils";
 
 export type SortColumn = "scheduledDate" | "total" | null;
 
@@ -91,7 +92,7 @@ export function WorkOrdersTable({ workOrders, sortColumn, sortDirection, onSort 
                 {formatDate(wo.scheduledDate)} · {wo.scheduledTime}
               </TableCell>
               <TableCell className="text-right tabular-nums font-medium">
-                {wo.total > 0 ? `$${wo.total.toLocaleString()}` : <span className="text-text-muted">—</span>}
+                {wo.total > 0 ? `$${formatMoney(wo.total)}` : <span className="text-text-muted">—</span>}
               </TableCell>
             </TableRow>
           );

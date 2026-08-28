@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import type { Part } from "@/lib/dummy-data/parts";
+import { formatMoney } from "@/lib/utils";
 
 export type SortColumn = "unitPrice" | null;
 
@@ -47,7 +48,7 @@ export function PartsTable({ parts, sortColumn, sortDirection, onSort, onEdit }:
             <TableCell className="font-medium text-text-primary">{part.name}</TableCell>
             <TableCell className="font-mono text-[13px] text-text-muted">{part.sku}</TableCell>
             <TableCell className="text-text-secondary">{part.category}</TableCell>
-            <TableCell className="text-right tabular-nums font-medium">${part.unitPrice.toLocaleString()}</TableCell>
+            <TableCell className="text-right tabular-nums font-medium">${formatMoney(part.unitPrice)}</TableCell>
             <TableCell>
               <Badge variant={part.status === "active" ? "success" : "neutral"} dot>
                 {part.status === "active" ? "Active" : "Inactive"}

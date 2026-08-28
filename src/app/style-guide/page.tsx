@@ -67,6 +67,7 @@ import {
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/lib/toast-bus";
+import { formatMoney } from "@/lib/utils";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -228,7 +229,7 @@ function InteractiveDemos() {
                 </TableCell>
                 <TableCell className="text-text-secondary">{wo.tech}</TableCell>
                 <TableCell className="text-right tabular-nums">
-                  ${wo.total.toLocaleString()}
+                  ${formatMoney(wo.total)}
                 </TableCell>
               </TableRow>
             ))}

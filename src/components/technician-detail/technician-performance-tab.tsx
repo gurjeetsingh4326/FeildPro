@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { STATUS_META } from "@/lib/work-order-status";
 import type { TechnicianStats } from "@/lib/dummy-data/technicians";
 import type { WorkOrder } from "@/lib/dummy-data/work-orders";
+import { formatMoney } from "@/lib/utils";
 
 function formatDate(iso: string) {
   const [, m, d] = iso.split("-");
@@ -18,9 +19,9 @@ export function TechnicianPerformanceTab({ stats, recentJobs }: { stats: Technic
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
         <KpiCard label="Jobs Completed" value={String(stats.jobsCompleted)} icon={CheckCircle2} />
-        <KpiCard label="Total Revenue" value={`$${stats.totalRevenue.toLocaleString()}`} icon={DollarSign} />
+        <KpiCard label="Total Revenue" value={`$${formatMoney(stats.totalRevenue)}`} icon={DollarSign} />
         <KpiCard label="On-Time Rate" value={`${stats.onTimeRatePct}%`} icon={Target} />
-        <KpiCard label="Avg. Job Value" value={`$${stats.avgJobValue.toLocaleString()}`} icon={Timer} />
+        <KpiCard label="Avg. Job Value" value={`$${formatMoney(stats.avgJobValue)}`} icon={Timer} />
       </div>
 
       <Card className="divide-y divide-border p-0">
@@ -50,7 +51,7 @@ export function TechnicianPerformanceTab({ stats, recentJobs }: { stats: Technic
                 <div className="shrink-0 text-right">
                   <p className="text-[13px] text-text-muted">{formatDate(wo.scheduledDate)}</p>
                   <p className="tabular-nums text-sm font-medium text-text-primary">
-                    {wo.total > 0 ? `$${wo.total.toLocaleString()}` : "—"}
+                    {wo.total > 0 ? `$${formatMoney(wo.total)}` : "—"}
                   </p>
                 </div>
               </Link>

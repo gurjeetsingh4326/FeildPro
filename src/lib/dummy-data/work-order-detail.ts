@@ -2,6 +2,7 @@ import { TECHNICIANS } from "@/lib/dummy-data/schedule";
 import { WORK_ORDERS, type WorkOrder } from "@/lib/dummy-data/work-orders";
 import { getCustomerByName, getCustomerStats, getPrimaryAddress, getPrimaryContact } from "@/lib/dummy-data/customers";
 import type { ActivityEventType } from "@/lib/types";
+import { formatMoney } from "@/lib/utils";
 
 export interface LaborLine {
   id: string;
@@ -159,7 +160,7 @@ function deriveDetail(wo: WorkOrder): WorkOrderDetail {
       id: `${wo.id}-tl-5`,
       type: "paid",
       actorName: wo.customerName,
-      description: `paid the invoice ($${wo.total.toLocaleString()})`,
+      description: `paid the invoice ($${formatMoney(wo.total)})`,
       timestamp: `${wo.scheduledDate} (paid)`,
     });
   }

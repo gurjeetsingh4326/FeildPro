@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { STATUS_META } from "@/lib/work-order-status";
 import type { WorkOrder } from "@/lib/dummy-data/work-orders";
+import { formatMoney } from "@/lib/utils";
 
 function formatDate(iso: string) {
   const [, m, d] = iso.split("-");
@@ -43,7 +44,7 @@ export function CustomerHistoryTab({ workOrders }: { workOrders: WorkOrder[] }) 
             <div className="shrink-0 text-right">
               <p className="text-[13px] text-text-muted">{formatDate(wo.scheduledDate)}</p>
               <p className="tabular-nums text-sm font-medium text-text-primary">
-                {wo.total > 0 ? `$${wo.total.toLocaleString()}` : "—"}
+                {wo.total > 0 ? `$${formatMoney(wo.total)}` : "—"}
               </p>
             </div>
           </Link>

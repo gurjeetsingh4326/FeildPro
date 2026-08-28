@@ -12,6 +12,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
 import { getCustomerStats, getPrimaryContact, type Customer } from "@/lib/dummy-data/customers";
+import { formatMoney } from "@/lib/utils";
 
 export type SortColumn = "customerSince" | "totalSpend" | null;
 
@@ -74,7 +75,7 @@ export function CustomersTable({ customers, sortColumn, sortDirection, onSort }:
               </TableCell>
               <TableCell className="tabular-nums text-text-secondary">{stats.openWorkOrders}</TableCell>
               <TableCell className="text-right tabular-nums font-medium">
-                ${stats.totalSpend.toLocaleString()}
+                ${formatMoney(stats.totalSpend)}
               </TableCell>
               <TableCell className="whitespace-nowrap text-text-secondary">{formatDate(customer.customerSince)}</TableCell>
             </TableRow>

@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import { OUTSTANDING_INVOICES } from "@/lib/dummy-data/dashboard";
 import { INVOICE_STATUS_META } from "@/lib/dummy-data/invoices";
+import { formatMoney } from "@/lib/utils";
 
 export function OutstandingInvoicesCard() {
   return (
@@ -36,7 +37,7 @@ export function OutstandingInvoicesCard() {
                 <div className="mt-1 flex items-center justify-between gap-2 text-[13px] text-text-muted">
                   <span className="font-mono">{inv.id}</span>
                   <span className="tabular-nums font-medium text-text-primary">
-                    ${inv.amount.toLocaleString()}
+                    ${formatMoney(inv.amount)}
                   </span>
                 </div>
                 {inv.daysOverdue > 0 ? (
@@ -81,7 +82,7 @@ export function OutstandingInvoicesCard() {
                     )}
                   </TableCell>
                   <TableCell className="text-right tabular-nums font-medium">
-                    ${inv.amount.toLocaleString()}
+                    ${formatMoney(inv.amount)}
                   </TableCell>
                 </TableRow>
               );

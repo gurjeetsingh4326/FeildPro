@@ -7,6 +7,7 @@ import { getCustomerByName } from "@/lib/dummy-data/customers";
 import { getTechnicianByName } from "@/lib/dummy-data/technicians";
 import type { CustomerContact } from "@/lib/dummy-data/work-order-detail";
 import type { WorkOrder } from "@/lib/dummy-data/work-orders";
+import { formatMoney } from "@/lib/utils";
 
 export interface WoRightRailProps {
   workOrder: WorkOrder;
@@ -53,7 +54,7 @@ export function WoRightRail({ workOrder, customer, createdDate, source, onOpenAs
             <p className="text-[12px] text-text-muted">Open work orders</p>
           </div>
           <div>
-            <p className="text-lg font-bold text-text-primary">${customer.totalSpend.toLocaleString()}</p>
+            <p className="text-lg font-bold text-text-primary">${formatMoney(customer.totalSpend)}</p>
             <p className="text-[12px] text-text-muted">Total spend</p>
           </div>
         </div>

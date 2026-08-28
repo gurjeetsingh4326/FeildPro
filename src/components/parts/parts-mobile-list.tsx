@@ -1,6 +1,7 @@
 import { Pencil } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { Part } from "@/lib/dummy-data/parts";
+import { formatMoney } from "@/lib/utils";
 
 export function PartsMobileList({ parts, onEdit }: { parts: Part[]; onEdit: (part: Part) => void }) {
   if (parts.length === 0) {
@@ -33,7 +34,7 @@ export function PartsMobileList({ parts, onEdit }: { parts: Part[]; onEdit: (par
             <Badge variant={part.status === "active" ? "success" : "neutral"} dot>
               {part.status === "active" ? "Active" : "Inactive"}
             </Badge>
-            <span className="tabular-nums font-medium text-text-primary">${part.unitPrice.toLocaleString()}</span>
+            <span className="tabular-nums font-medium text-text-primary">${formatMoney(part.unitPrice)}</span>
           </div>
         </li>
       ))}

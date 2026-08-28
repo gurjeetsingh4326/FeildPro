@@ -1,6 +1,7 @@
 import { Pencil } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { Service } from "@/lib/dummy-data/services";
+import { formatMoney } from "@/lib/utils";
 
 export function ServicesMobileList({ services, onEdit }: { services: Service[]; onEdit: (service: Service) => void }) {
   if (services.length === 0) {
@@ -35,7 +36,7 @@ export function ServicesMobileList({ services, onEdit }: { services: Service[]; 
               {service.status === "active" ? "Active" : "Inactive"}
             </Badge>
             <span className="tabular-nums font-medium text-text-primary">
-              {service.estimatedHours}h · ${service.basePrice.toLocaleString()}
+              {service.estimatedHours}h · ${formatMoney(service.basePrice)}
             </span>
           </div>
         </li>

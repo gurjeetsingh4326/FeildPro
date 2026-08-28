@@ -107,7 +107,19 @@ for granular day-to-day status).
   (search/filter/sort/create, the amount auto-fill, the Invoice ↔ Payments
   cross-link) across breakpoints and both themes, plus a full production
   build.
-- [ ] Reports (revenue, WO stats, technician performance, utilization, resolution time, FTF rate, CSAT, outstanding invoices)
+- [x] Reports (revenue, WO stats, technician performance, utilization,
+  resolution time, FTF rate, CSAT, outstanding invoices) — completing Phase
+  3. A single analytics page reusing `RevenueTrendCard` and
+  `OutstandingInvoicesCard` from the Dashboard as-is, plus new charts (Work
+  Order Status donut, Avg. Resolution Time bar) and a Technician Performance
+  table, all computed from the same source data as every other module
+  (WORK_ORDERS, INVOICES, TECHNICIANS' `getTechnicianStats()`) rather than a
+  separate hand-typed dataset. Found and fixed a real, systemic bug while
+  building it (see PROJECT_STATUS.md) — `.toLocaleString()` without an
+  explicit locale, used everywhere in the app for currency, is
+  server-runtime-locale-dependent and silently misformats any value over
+  $100k; fixed with a shared `formatMoney()` utility applied across all 26
+  affected files.
 
 ## Phase 4 — Administration
 

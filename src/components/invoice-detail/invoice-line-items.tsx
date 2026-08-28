@@ -1,8 +1,9 @@
 import { Card } from "@/components/ui/card";
 import { invoiceSubtotal, invoiceTax, invoiceTotal, type Invoice } from "@/lib/dummy-data/invoices";
+import { formatMoney } from "@/lib/utils";
 
 function money(value: number) {
-  return value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return formatMoney(value, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 export function InvoiceLineItems({ invoice }: { invoice: Invoice }) {

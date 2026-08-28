@@ -3,6 +3,7 @@ import { Phone } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
 import { getCustomerStats, getPrimaryContact, type Customer } from "@/lib/dummy-data/customers";
+import { formatMoney } from "@/lib/utils";
 
 /** Below `md`, a stacked card list instead of the full table — same pattern
     already established for Work Orders (docs/RESPONSIVE_DESIGN.md). */
@@ -40,7 +41,7 @@ export function CustomersMobileList({ customers }: { customers: Customer[] }) {
               ) : null}
               <div className="mt-2 flex items-center justify-between gap-2 border-t border-border pt-2 text-[12px] text-text-muted">
                 <span>{stats.openWorkOrders} open work orders</span>
-                <span className="tabular-nums font-medium text-text-primary">${stats.totalSpend.toLocaleString()}</span>
+                <span className="tabular-nums font-medium text-text-primary">${formatMoney(stats.totalSpend)}</span>
               </div>
             </Link>
           </li>

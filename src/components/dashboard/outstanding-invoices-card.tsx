@@ -10,14 +10,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { OUTSTANDING_INVOICES } from "@/lib/dummy-data/dashboard";
-import type { InvoiceStatus } from "@/lib/types";
-
-const STATUS_BADGE: Record<InvoiceStatus, { variant: "success" | "warning" | "error" | "neutral"; label: string }> = {
-  paid: { variant: "success", label: "Paid" },
-  sent: { variant: "neutral", label: "Sent" },
-  overdue: { variant: "error", label: "Overdue" },
-  draft: { variant: "neutral", label: "Draft" },
-};
+import { INVOICE_STATUS_META } from "@/lib/dummy-data/invoices";
 
 export function OutstandingInvoicesCard() {
   return (
@@ -32,22 +25,24 @@ export function OutstandingInvoicesCard() {
       {/* Below sm: stacked cards, not a cramped/scrolling table (docs/RESPONSIVE_DESIGN.md). */}
       <ul className="space-y-1 sm:hidden">
         {OUTSTANDING_INVOICES.map((inv) => {
-          const badge = STATUS_BADGE[inv.status];
+          const badge = INVOICE_STATUS_META[inv.status];
           return (
-            <li key={inv.id} className="rounded-md border border-border p-3">
-              <div className="flex items-center justify-between gap-2">
-                <p className="truncate text-sm font-medium text-text-primary">{inv.customerName}</p>
-                <Badge variant={badge.variant}>{badge.label}</Badge>
-              </div>
-              <div className="mt-1 flex items-center justify-between gap-2 text-[13px] text-text-muted">
-                <span className="font-mono">{inv.id}</span>
-                <span className="tabular-nums font-medium text-text-primary">
-                  ${inv.amount.toLocaleString()}
-                </span>
-              </div>
-              {inv.daysOverdue > 0 ? (
-                <p className="mt-1 text-[13px] text-error">{inv.daysOverdue} days overdue</p>
-              ) : null}
+            <li key={inv.id}>
+              <Link href={`/invoices/${inv.id}`} className="block rounded-md border border-border p-3 hover:bg-background">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="truncate text-sm font-medium text-text-primary">{inv.customerName}</p>
+                  <Badge variant={badge.badge}>{badge.label}</Badge>
+                </div>
+                <div className="mt-1 flex items-center justify-between gap-2 text-[13px] text-text-muted">
+                  <span className="font-mono">{inv.id}</span>
+                  <span className="tabular-nums font-medium text-text-primary">
+                    ${inv.amount.toLocaleString()}
+                  </span>
+                </div>
+                {inv.daysOverdue > 0 ? (
+                  <p className="mt-1 text-[13px] text-error">{inv.daysOverdue} days overdue</p>
+                ) : null}
+              </Link>
             </li>
           );
         })}
@@ -66,13 +61,17 @@ export function OutstandingInvoicesCard() {
           </TableHeader>
           <TableBody>
             {OUTSTANDING_INVOICES.map((inv) => {
-              const badge = STATUS_BADGE[inv.status];
+              const badge = INVOICE_STATUS_META[inv.status];
               return (
                 <TableRow key={inv.id}>
-                  <TableCell className="font-mono text-text-secondary">{inv.id}</TableCell>
+                  <TableCell className="font-mono">
+                    <Link href={`/invoices/${inv.id}`} className="text-primary-text hover:underline">
+                      {inv.id}
+                    </Link>
+                  </TableCell>
                   <TableCell className="font-medium">{inv.customerName}</TableCell>
                   <TableCell>
-                    <Badge variant={badge.variant}>{badge.label}</Badge>
+                    <Badge variant={badge.badge}>{badge.label}</Badge>
                   </TableCell>
                   <TableCell className="text-right tabular-nums">
                     {inv.daysOverdue > 0 ? (

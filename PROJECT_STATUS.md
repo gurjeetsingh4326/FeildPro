@@ -8,8 +8,8 @@ the full phased checklist this rolls up from.
 
 **Phase 0, Phase 1, and Phase 2 are complete; Phase 3 is underway** — all 5
 portfolio hero screens are built and verified, and Customers, Technicians,
-Services, and Parts & Inventory (the first 4 Phase 3 modules) are done.
-3 Phase 3 modules remain: Invoices, Payments, Reports.
+Services, Parts & Inventory, and Invoices (the first 5 Phase 3 modules) are
+done. 2 Phase 3 modules remain: Payments, Reports.
 
 ## Last updated
 
@@ -494,9 +494,54 @@ Services, and Parts & Inventory (the first 4 Phase 3 modules) are done.
     — with zero regression to Work Orders, Work Order Details, Customers,
     Technicians, Services, or the Technician Mobile View.
 
+- Built the Invoices module — the fifth Phase 3 module, and the first one
+  that pre-dates its own module: the Dashboard hero screen already shipped
+  an "Outstanding Invoices" widget with 4 invoice IDs/amounts/statuses
+  months ago (in dummy-data time), and `RECENT_ACTIVITY` mentions two more
+  by name. Rather than invent a parallel set of invoice numbers, the new
+  `src/lib/dummy-data/invoices.ts` treats those exact 4 as real `Invoice`
+  records (same id/customer/amount/status) and adds 8 more, 4 of them linked
+  via `workOrderId` to existing invoiced/paid work orders.
+  - **List** (`/invoices`): search/status filter/sort (due date, amount)/
+    paginate/New Invoice, matching the established list skeleton.
+  - **Detail** (`/invoices/[id]`): status-driven header (Mark as Sent for
+    draft → Record Payment for sent/overdue), an overdue banner (the
+    `warning`/`error`-tinted persistent-banner pattern from
+    `docs/UI_PATTERNS.md`, first real use of it), a line-items table with
+    subtotal/tax/discount/total, a Timeline (reusing the `Timeline`/
+    `TimelineItem` primitive from Work Order Details), and a right rail
+    (customer "View profile" link, source Work Order link when
+    `workOrderId` is set, quick facts).
+  - `daysOverdue()` is computed from the due date against a shared
+    fictional "today" (`2026-08-26`, matching Schedule's), not hand-typed —
+    so the banner and the list's "N days overdue" column can never disagree
+    with the date actually shown on the invoice.
+  - Cross-linked in both directions: refactored the Dashboard's
+    `outstanding-invoices-card.tsx` to import the same `INVOICE_STATUS_META`
+    this module uses (deleting its own separate copy of the exact same
+    badge mapping) and made its rows real links to `/invoices/[id]` instead
+    of inert text; the new Invoice Detail right rail links back to Customer
+    Profile and Work Order Details the same way Work Order Details and
+    Technician Profile already link to each other.
+  - Deliberately did *not* wire Work Order Details' "Generate Invoice"
+    button to fabricate a new `Invoice` record — every "create" flow in this
+    UI-only phase (Work Orders, Customers, Technicians, Services, Parts,
+    and now Invoices) only mutates that page's local component state and
+    resets on navigation, since there's no shared store or backend yet
+    (`docs/DESIGN_DECISIONS.md`'s known-risks note). Making one button
+    pretend to persist across pages when none of the others do would be a
+    worse inconsistency than the one it might appear to fix.
+  - Verified via full production build (24 routes) and headless Playwright
+    in both themes: search/filter/sort/create, both status transitions
+    (draft → sent → paid), the overdue banner and its day count, tax/
+    discount math on a multi-line invoice, every cross-module link (Dashboard
+    → Invoice, Invoice → Customer, Invoice → Work Order), and the bad-id 404
+    — with zero regression to Work Orders, Work Order Details, Customers,
+    Technicians, Services, Parts & Inventory, or the Technician Mobile View.
+
 ## What's next
 
-1. Phase 3: the remaining modules — Invoices, Payments, Reports.
+1. Phase 3: the remaining modules — Payments, Reports.
 2. Housekeeping: run `npm run lint` and clean up the 6 pre-existing errors it
    surfaces (see note above) — not blocking, but worth doing before Phase 3
    adds more surface area.

@@ -83,7 +83,19 @@ for granular day-to-day status).
   (search/filter/sort, stock adjustment updating both tabs live, the Add
   Part catalog integration) across breakpoints and both themes, plus a full
   production build.
-- [ ] Invoices
+- [x] Invoices — list (`/invoices`, search/status filter/sort/paginate/New
+  Invoice) + detail page (`/invoices/[id]`) with a status-driven header
+  (Mark as Sent/Record Payment), an overdue banner, a line-items table
+  (subtotal/tax/discount/total), a Timeline, and a right rail (customer
+  "View profile" link, source Work Order link where applicable, quick
+  facts). Overdue day counts are derived from the due date, not hand-typed.
+  Cross-linked with the Dashboard's existing Outstanding Invoices widget
+  (same 4 invoice records, shared status-badge mapping, rows now link to
+  the real detail pages) and with Work Order Details (Customer "View
+  profile"). Verified functionally (search/filter/sort/create, both status
+  transitions, the overdue banner, tax/discount math, all cross-module
+  deep links, bad-id 404) across breakpoints and both themes, plus a full
+  production build.
 - [ ] Payments
 - [ ] Reports (revenue, WO stats, technician performance, utilization, resolution time, FTF rate, CSAT, outstanding invoices)
 

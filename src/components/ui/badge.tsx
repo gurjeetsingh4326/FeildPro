@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const badgeVariants = cva(
-  "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium leading-none w-fit",
+  "inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium leading-none w-fit",
   {
     variants: {
       variant: {
@@ -44,7 +44,7 @@ function Badge({ className, variant, dot = false, children, ...props }: BadgePro
 /* Work-order priority badge — square-ish radius (not pill) to read distinctly
    from status badges, per docs/COMPONENT_GUIDELINES.md. */
 const priorityVariants = cva(
-  "inline-flex items-center gap-1.5 rounded-sm px-2 py-0.5 text-xs font-medium leading-none w-fit border",
+  "inline-flex items-center gap-1.5 whitespace-nowrap rounded-sm px-2 py-0.5 text-xs font-medium leading-none w-fit border",
   {
     variants: {
       priority: {

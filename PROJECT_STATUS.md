@@ -6,11 +6,9 @@ the full phased checklist this rolls up from.
 
 ## Current phase
 
-**Phase 0 through Phase 3 are complete; Phase 4 is underway.** All 5
-portfolio hero screens and all 7 Phase 3 modules are built and verified.
-Users & Roles and Settings (the first 2 of 4 Phase 4 items) are done. 2
-items remain: an empty/loading/error state pass across every screen, and a
-full responsive pass on the non-hero screens.
+**Phase 0 through Phase 4 are complete.** All 5 portfolio hero screens, all
+7 Phase 3 modules, and all 4 Phase 4 (Administration) items are built and
+verified. Phase 5 (UI Polish & QA) is next.
 
 ## Last updated
 
@@ -657,10 +655,54 @@ full responsive pass on the non-hero screens.
     and a full regression sweep — zero impact on any of the other 13
     modules/hero screens.
 
+- Completed Phase 4 with the last two items: an empty/loading/error state
+  pass, and a full responsive pass on the non-hero screens.
+  - **Empty/loading/error states**: audited every list built since
+    Customers — all already had a proper "No [entity] match your filters"
+    empty state (table and mobile-list versions both), so no gaps there.
+    Added the two pieces that were actually missing: a shared
+    `(app)/loading.tsx` (a generic list-page skeleton using the `Skeleton`
+    primitive already built in Phase 0 — title/toolbar/table-row shapes)
+    and `(app)/error.tsx` (the documented `docs/UI_PATTERNS.md` "Error
+    loading" pattern: `AlertTriangle` icon, warning tint, "Couldn't load
+    this page", Retry button). Both are Next.js's standard per-route-segment
+    convention, so they apply to every page in the group automatically
+    without per-page wiring. Verified `error.tsx` for real by temporarily
+    adding a route that throws, confirming the boundary caught it with the
+    sidebar/header still intact, then removed the test route.
+  - **Responsive pass**: checked all 13 Phase 3/4 screens (list + detail)
+    at 8 widths from 320px to 2560px — zero horizontal overflow anywhere,
+    which mostly reflects that every list already got a mobile card-list
+    view built proactively during its own module's construction rather than
+    deferred to this pass.
+  - **Found and fixed two real, pre-existing bugs this surfaced, both at the
+    shared-component level so every screen benefits at once**:
+    1. `Badge`/`PriorityBadge` had no `whitespace-nowrap`, so two-word
+       status labels ("Low Stock", "In Progress", "Out of Stock") wrapped
+       onto two lines inside narrow table cells at tablet width — visible
+       on Inventory's Stock Levels table at 768px. One-line fix on the
+       shared component fixed it everywhere at once, not just Inventory.
+    2. The Sidebar's documented "defaults to collapsed icon-rail at `lg`"
+       behavior (`docs/RESPONSIVE_DESIGN.md`'s own sidebar table) had never
+       actually been implemented, going all the way back to Phase 1 — it
+       always initialized `collapsed` to `false` regardless of viewport, so
+       every screen showed the full 260px expanded sidebar even at
+       1024–1279px, eating into the "usable down to tablet" width budget
+       the docs call for. Fixed by defaulting to collapsed specifically in
+       that range *only* when the user hasn't made an explicit choice yet
+       (checked via `matchMedia` once on mount) — an explicit prior
+       collapse/expand click still always wins, verified across all 4
+       combinations (fresh `lg`/fresh `xl`/user-expanded-at-`lg`-survives-
+       reload/user-collapsed-at-`xl`-survives-reload).
+  - Verified via full production build (22 routes) and headless Playwright
+    in both themes: the responsive sweep itself, the error boundary, and a
+    full regression pass — zero impact on any other module or hero screen.
+
 ## What's next
 
-1. Phase 4 (Administration): an empty/loading/error state pass across every
-   screen, and a full responsive pass on the non-hero screens.
+1. Phase 5 (UI Polish & QA): a design-system consistency audit against
+   `docs/`, an accessibility pass, dark-mode QA across every screen, and a
+   dummy-data realism pass for the portfolio hero screenshots.
 2. Housekeeping: run `npm run lint` and clean up the 6 pre-existing errors it
    surfaces (see note above) — not blocking, but worth doing before Phase 4
    adds more surface area.

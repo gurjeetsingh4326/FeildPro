@@ -145,7 +145,16 @@ export function Sidebar() {
 
   React.useEffect(() => {
     const stored = window.localStorage.getItem(COLLAPSE_STORAGE_KEY);
-    if (stored === "1") setCollapsed(true);
+    if (stored === "1") {
+      setCollapsed(true);
+    } else if (stored !== "0") {
+      // No explicit user preference yet — default to the collapsed icon-rail
+      // specifically at `lg` (1024–1279px, not xl+), per
+      // docs/RESPONSIVE_DESIGN.md: "lg | Sidebar defaults to collapsed
+      // icon-rail, expandable on hover/click".
+      const isLgOnly = window.matchMedia("(min-width: 1024px) and (max-width: 1279px)").matches;
+      setCollapsed(isLgOnly);
+    }
     setMounted(true);
   }, []);
 

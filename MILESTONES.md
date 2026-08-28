@@ -139,8 +139,24 @@ for granular day-to-day status).
   lines, the Sunrise Senior Living invoice example, New Invoice's due-date
   math) so the page reads as describing real app behavior, not placeholder
   content.
-- [ ] Empty/loading/error state pass across every screen
-- [ ] Full responsive pass (tablet/mobile) across non-hero screens
+- [x] Empty/loading/error state pass across every screen — audited "no
+  results" empty states (already present on every list built since
+  Customers); added a shared `(app)/loading.tsx` skeleton and
+  `(app)/error.tsx` boundary (AlertTriangle + "Couldn't load this page" +
+  Retry, per `docs/UI_PATTERNS.md`) for the whole route group, verified by
+  intentionally throwing from a test route and confirming the boundary
+  rendered correctly with the app shell intact.
+- [x] Full responsive pass (tablet/mobile) across non-hero screens —
+  checked all 13 Phase 3/4 screens (list + detail) at 8 widths from 320px
+  to 2560px: zero horizontal overflow anywhere. Found and fixed two real
+  bugs this surfaced: `Badge`/`PriorityBadge` had no `whitespace-nowrap`,
+  so two-word labels ("Low Stock", "In Progress") wrapped inside narrow
+  table cells; and the Sidebar's documented "defaults to collapsed
+  icon-rail at `lg`" behavior (`docs/RESPONSIVE_DESIGN.md`) had never
+  actually been implemented since Phase 1 — it always defaulted expanded
+  regardless of breakpoint. Both fixed at the shared-component level, so
+  every screen benefits at once; an explicit user collapse/expand choice
+  still always overrides the breakpoint default.
 
 ## Phase 5 — UI Polish & QA
 

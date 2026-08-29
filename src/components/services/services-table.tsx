@@ -67,7 +67,7 @@ export function ServicesTable({ services, sortColumn, sortDirection, onSort, onE
                 type="button"
                 aria-label={`Edit ${service.name}`}
                 onClick={() => onEdit(service)}
-                className="text-text-muted hover:text-text-primary"
+                className="rounded-sm text-text-muted hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
               >
                 <Pencil className="size-4" />
               </button>

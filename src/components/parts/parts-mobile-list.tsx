@@ -25,7 +25,7 @@ export function PartsMobileList({ parts, onEdit }: { parts: Part[]; onEdit: (par
               type="button"
               aria-label={`Edit ${part.name}`}
               onClick={() => onEdit(part)}
-              className="shrink-0 text-text-muted hover:text-text-primary"
+              className="shrink-0 rounded-sm text-text-muted hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             >
               <Pencil className="size-4" />
             </button>

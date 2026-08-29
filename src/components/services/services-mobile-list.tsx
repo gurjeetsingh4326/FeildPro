@@ -25,7 +25,7 @@ export function ServicesMobileList({ services, onEdit }: { services: Service[]; 
               type="button"
               aria-label={`Edit ${service.name}`}
               onClick={() => onEdit(service)}
-              className="shrink-0 text-text-muted hover:text-text-primary"
+              className="shrink-0 rounded-sm text-text-muted hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             >
               <Pencil className="size-4" />
             </button>

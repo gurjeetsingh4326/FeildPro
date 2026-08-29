@@ -6,9 +6,10 @@ the full phased checklist this rolls up from.
 
 ## Current phase
 
-**Phase 0 through Phase 4 are complete.** All 5 portfolio hero screens, all
-7 Phase 3 modules, and all 4 Phase 4 (Administration) items are built and
-verified. Phase 5 (UI Polish & QA) is next.
+**Phase 0 through Phase 5 are complete — the full UI build (Phases 0–5) is
+done.** All 5 portfolio hero screens, all 7 Phase 3 modules, all 4 Phase 4
+items, and all 4 Phase 5 QA items are built and verified. Phase 6 (Backend)
+is next, pending user approval to start it per MILESTONES.md.
 
 ## Last updated
 
@@ -698,13 +699,50 @@ verified. Phase 5 (UI Polish & QA) is next.
     in both themes: the responsive sweep itself, the error boundary, and a
     full regression pass — zero impact on any other module or hero screen.
 
+- Completed Phase 5 (UI Polish & QA) — the last phase of the UI-only build.
+  - **Design system consistency audit**: grepped the whole codebase for
+    hardcoded hex/rgb colors and arbitrary Tailwind values outside the
+    documented scale. Zero real violations found — the one hardcoded hex
+    array is a legitimate per-entity data value (random technician-swatch
+    palette, same pattern as `schedule.ts`'s colors), and every arbitrary
+    `text-[13px]`/`text-[12px]` exactly matches `docs/TYPOGRAPHY.md`'s
+    "Small"/"Caption" sizes, for which Tailwind has no exact default utility.
+  - **Accessibility pass**: verified first (via computed styles in a real
+    browser) that native focus outlines were already present everywhere —
+    no global reset strips them, so this was never a WCAG 2.4.7 violation.
+    Grepped for interactive elements missing the app's custom
+    `focus-visible` ring treatment anyway, since an inconsistent mix of
+    native and custom rings reads as sloppy under keyboard navigation. Found
+    and fixed 14 real gaps across 12 files (small icon-only row actions,
+    the sidebar's main nav links, the sidebar collapse toggle, the mobile
+    hamburger trigger, the Schedule month-grid day cells and technician
+    filter chips, two Technician Mobile job-execution buttons) — verified
+    visually via keyboard-focus screenshots.
+  - **Dark mode QA**: already verified continuously during every module's
+    own build this phase; closed the two remaining gaps (Users' Suspend
+    confirmation dialog, the Role Permissions matrix) with targeted
+    dark-mode screenshots — no issues found.
+  - **Dummy-data realism pass**: reconfirmed the 5 hero screens' data is
+    already generously populated from their original Phase 2 builds; no
+    changes needed.
+  - Verified via full production build (22 routes) and headless Playwright
+    in both themes and at mobile width — zero regression to any module or
+    hero screen from the 12-file focus-state change set.
+
+**This completes the entire UI-only build (Phases 0–5).** All 5 portfolio
+hero screens and all 12 supporting modules are built, functionally
+verified, responsive, dark-mode-correct, and keyboard-accessible, running
+entirely on structured dummy data.
+
 ## What's next
 
-1. Phase 5 (UI Polish & QA): a design-system consistency audit against
-   `docs/`, an accessibility pass, dark-mode QA across every screen, and a
-   dummy-data realism pass for the portfolio hero screenshots.
+1. **Phase 6 (Backend) is next per `MILESTONES.md`, but its own heading
+   states it is "not started until Phase 0–5 UI is approved" — that's a
+   user decision point, not an engineering task. Confirm with the user
+   before starting any Phase 6 work** (Next.js API routes/Prisma schema,
+   auth, wiring the frontend off dummy data onto real endpoints).
 2. Housekeeping: run `npm run lint` and clean up the 6 pre-existing errors it
-   surfaces (see note above) — not blocking, but worth doing before Phase 4
+   surfaces (see note above) — not blocking, but worth doing before Phase 6
    adds more surface area.
 3. Housekeeping: back-port three implementation-driven additions into the docs
    so they match code — `docs/COLOR_SYSTEM.md` needs the `--primary`/`--primary-text`
@@ -716,8 +754,10 @@ verified. Phase 5 (UI Polish & QA) is next.
 
 ## Open questions / decisions needed from the user
 
-- None blocking right now — proceeding under Auto Mode defaults documented in
-  `docs/DESIGN_DECISIONS.md`. Flag here if that changes.
+- **Ready to start Phase 6 (Backend)?** The full UI (Phases 0–5) is complete
+  and verified against dummy data. `MILESTONES.md`'s Phase 6 heading gates
+  it on explicit approval before touching the backend — flag here once
+  answered, and update this section.
 
 ## Known risks / watch items
 

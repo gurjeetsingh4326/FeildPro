@@ -59,7 +59,7 @@ export function PartsTable({ parts, sortColumn, sortDirection, onSort, onEdit }:
                 type="button"
                 aria-label={`Edit ${part.name}`}
                 onClick={() => onEdit(part)}
-                className="text-text-muted hover:text-text-primary"
+                className="rounded-sm text-text-muted hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
               >
                 <Pencil className="size-4" />
               </button>

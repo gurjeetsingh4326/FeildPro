@@ -160,10 +160,34 @@ for granular day-to-day status).
 
 ## Phase 5 — UI Polish & QA
 
-- [ ] Design system consistency audit against `docs/` (colors, spacing, type, components)
-- [ ] Accessibility pass (focus states, contrast, keyboard nav)
-- [ ] Dark mode QA across every screen
-- [ ] Dummy-data realism pass for portfolio screenshots (Section 14 hero screens especially)
+- [x] Design system consistency audit against `docs/` (colors, spacing, type,
+  components) — grepped the whole codebase for hardcoded hex/rgb colors and
+  arbitrary Tailwind spacing/radius values outside the documented scale.
+  Found zero real violations: the one hardcoded hex array
+  (`new-technician-modal.tsx`'s random-swatch palette) is a legitimate data
+  value matching the same pattern as `schedule.ts`'s per-technician colors,
+  and every `text-[13px]`/`text-[12px]` arbitrary value exactly matches
+  `docs/TYPOGRAPHY.md`'s "Small"/"Caption" sizes, which have no exact
+  default Tailwind utility.
+- [x] Accessibility pass (focus states, contrast, keyboard nav) — grepped
+  for interactive elements missing `focus-visible` styling; verified first
+  that native browser focus outlines were already present everywhere (no
+  global reset strips them, confirmed via computed styles), so this was a
+  visual-consistency gap, not a WCAG 2.4.7 violation. Found and fixed 14
+  real gaps across 12 files — small icon-only buttons (table row edit/
+  remove actions) and the sidebar's main nav links had no custom ring,
+  meaning keyboard users saw an inconsistent (or, for small icon targets,
+  easy-to-miss) native outline instead of the app's primary-colored ring
+  used everywhere else. Verified the fix visually via keyboard-focus
+  screenshots.
+- [x] Dark mode QA across every screen — already verified continuously
+  during each module's own build this phase; closed the two remaining gaps
+  (the Suspend confirmation dialog, the Role Permissions matrix) with
+  targeted dark-mode screenshots. No issues found.
+- [x] Dummy-data realism pass for portfolio screenshots (hero screens
+  especially) — reconfirmed the 5 hero screens' dummy data is already
+  generously populated (no orphaned/empty widget states) from their
+  original Phase 2 builds; no changes needed.
 
 ## Phase 6 — Backend (not started until Phase 0–5 UI is approved)
 

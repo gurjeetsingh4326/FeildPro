@@ -114,7 +114,7 @@ export function CustomerAddressesTab({
                 type="button"
                 aria-label="Remove address"
                 onClick={() => onRemoveAddress(address.id)}
-                className="shrink-0 text-text-muted hover:text-error"
+                className="shrink-0 rounded-sm text-text-muted hover:text-error focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
               >
                 <Trash2 className="size-4" />
               </button>

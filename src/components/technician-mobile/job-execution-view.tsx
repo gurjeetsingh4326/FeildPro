@@ -158,7 +158,7 @@ export function JobExecutionView({ initial }: { initial: WorkOrderDetail }) {
                         setLabor((prev) => prev.filter((l) => l.id !== line.id));
                         triggerAutosave();
                       }}
-                      className="text-text-muted hover:text-error"
+                      className="rounded-sm text-text-muted hover:text-error focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                     >
                       <Trash2 className="size-4" />
                     </button>
@@ -198,7 +198,7 @@ export function JobExecutionView({ initial }: { initial: WorkOrderDetail }) {
                         setParts((prev) => prev.filter((p) => p.id !== line.id));
                         triggerAutosave();
                       }}
-                      className="text-text-muted hover:text-error"
+                      className="rounded-sm text-text-muted hover:text-error focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                     >
                       <Trash2 className="size-4" />
                     </button>
@@ -272,7 +272,7 @@ export function JobExecutionView({ initial }: { initial: WorkOrderDetail }) {
                 ]);
                 triggerAutosave();
               }}
-              className="flex aspect-square flex-col items-center justify-center gap-1 rounded-md border border-dashed border-border-strong text-text-muted transition-colors hover:border-primary hover:text-primary-text"
+              className="flex aspect-square flex-col items-center justify-center gap-1 rounded-md border border-dashed border-border-strong text-text-muted transition-colors hover:border-primary hover:text-primary-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             >
               <Camera className="size-5" />
               <span className="text-[10px]">Add photo</span>

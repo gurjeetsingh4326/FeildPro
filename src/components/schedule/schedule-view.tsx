@@ -205,7 +205,7 @@ export function ScheduleView() {
                 key={tech.id}
                 type="button"
                 onClick={() => toggleTechnician(tech.id)}
-                className="flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1 text-[13px] font-medium transition-colors"
+                className="flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1 text-[13px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                 style={{
                   borderColor: checked ? tech.color : "var(--border)",
                   color: checked ? "var(--text-primary)" : "var(--text-muted)",

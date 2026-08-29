@@ -251,7 +251,7 @@ export function WoLaborPartsTab({ labor, parts, onAddLabor, onRemoveLabor, onAdd
                         type="button"
                         onClick={() => onRemoveLabor(line.id)}
                         aria-label="Remove labor line"
-                        className="text-text-muted hover:text-error"
+                        className="rounded-sm text-text-muted hover:text-error focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                       >
                         <Trash2 className="size-4" />
                       </button>
@@ -307,7 +307,7 @@ export function WoLaborPartsTab({ labor, parts, onAddLabor, onRemoveLabor, onAdd
                         type="button"
                         onClick={() => onRemovePart(line.id)}
                         aria-label="Remove part line"
-                        className="text-text-muted hover:text-error"
+                        className="rounded-sm text-text-muted hover:text-error focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                       >
                         <Trash2 className="size-4" />
                       </button>

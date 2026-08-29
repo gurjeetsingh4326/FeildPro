@@ -47,6 +47,7 @@ export function MonthGrid({ onSelectDay }: MonthGridProps) {
               disabled={!inMonth}
               className={cn(
                 "flex min-h-[88px] flex-col items-start gap-1.5 border-b border-r border-border p-2 text-left transition-colors [&:nth-child(7n)]:border-r-0",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary",
                 inMonth ? "bg-surface hover:bg-background" : "bg-surface-sunken/40 text-text-disabled",
                 !inMonth && "cursor-default"
               )}

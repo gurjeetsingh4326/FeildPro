@@ -80,7 +80,7 @@ export function WoNotesAttachmentsTab({ notes, attachments, onAddNote, onAddAtta
           <button
             type="button"
             onClick={onAddAttachment}
-            className="flex aspect-square flex-col items-center justify-center gap-1 rounded-md border border-dashed border-border-strong text-text-muted transition-colors hover:border-primary hover:text-primary-text"
+            className="flex aspect-square flex-col items-center justify-center gap-1 rounded-md border border-dashed border-border-strong text-text-muted transition-colors hover:border-primary hover:text-primary-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
           >
             <Plus className="size-5" />
             <span className="text-[11px]">Add photo</span>

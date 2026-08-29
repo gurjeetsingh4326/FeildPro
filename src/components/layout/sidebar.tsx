@@ -35,6 +35,7 @@ function NavLink({
       onClick={onNavigate}
       className={cn(
         "group relative flex h-9 items-center gap-3 rounded-md px-3 text-sm font-medium transition-colors",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
         collapsed && "justify-center px-0",
         active
           ? "bg-sidebar-active-bg text-sidebar-active-text"
@@ -182,6 +183,7 @@ export function Sidebar() {
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           className={cn(
             "flex h-9 w-full items-center gap-2 rounded-md px-3 text-sidebar-text-muted transition-colors hover:bg-white/5 hover:text-sidebar-text",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
             collapsed && "justify-center px-0"
           )}
         >
@@ -204,7 +206,7 @@ export function MobileSidebar() {
         <button
           type="button"
           aria-label="Open navigation"
-          className="flex size-9 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-background hover:text-text-primary lg:hidden"
+          className="flex size-9 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-background hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 lg:hidden"
         >
           <Menu className="size-5" />
         </button>

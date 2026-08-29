@@ -5,6 +5,8 @@ import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { getCustomerByName } from "@/lib/dummy-data/customers";
 import { getTechnicianByName } from "@/lib/dummy-data/technicians";
+import { getCustomerLocation, getTechnicianLocation } from "@/lib/dummy-data/locations";
+import { JobLocationMapLoader } from "@/components/maps/job-location-map-loader";
 import type { CustomerContact } from "@/lib/dummy-data/work-order-detail";
 import type { WorkOrder } from "@/lib/dummy-data/work-orders";
 import { formatMoney } from "@/lib/utils";
@@ -19,7 +21,8 @@ export interface WoRightRailProps {
 
 export function WoRightRail({ workOrder, customer, createdDate, source, onOpenAssign }: WoRightRailProps) {
   const customerId = getCustomerByName(customer.name)?.id;
-  const technicianId = workOrder.technicianName ? getTechnicianByName(workOrder.technicianName)?.id : undefined;
+  const technicianProfile = workOrder.technicianName ? getTechnicianByName(workOrder.technicianName) : undefined;
+  const technicianId = technicianProfile?.id;
 
   return (
     <div className="space-y-4">
@@ -58,6 +61,21 @@ export function WoRightRail({ workOrder, customer, createdDate, source, onOpenAs
             <p className="text-[12px] text-text-muted">Total spend</p>
           </div>
         </div>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Location</CardTitle>
+        </CardHeader>
+        <JobLocationMapLoader
+          customerLocation={getCustomerLocation(customer.name)}
+          customerName={customer.name}
+          technicianLocation={technicianProfile ? getTechnicianLocation(technicianProfile.id) : undefined}
+          technicianName={technicianProfile?.name}
+          technicianColor={technicianProfile?.color}
+          technicianLabel="assigned"
+          height={180}
+        />
       </Card>
 
       <Card>

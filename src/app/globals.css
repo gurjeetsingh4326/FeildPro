@@ -58,3 +58,98 @@ body {
 .scrollbar-thin-dark::-webkit-scrollbar-thumb:hover {
   background-color: rgba(255, 255, 255, 0.28);
 }
+
+/* Leaflet map theming (src/components/maps/technician-map.tsx) — restyles
+   the library's default white/system-font chrome to match the design
+   tokens instead of fighting it with !important overrides scattered
+   per-component. */
+.leaflet-container {
+  font-family: var(--font-sans);
+  background: var(--surface-sunken);
+}
+
+/* Dark-mode map: there's no separate dark tile set (the one genuinely
+   keyless raster source is the standard OpenStreetMap tiles, light-only),
+   so this inverts + hue-rotates just the tile layer back to a dark map —
+   deliberately scoped to .leaflet-tile-pane only, not the whole container,
+   so markers/popups (already theme-correct via CSS vars) aren't re-inverted
+   along with it. */
+.fieldpro-map-dark .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) brightness(0.94) contrast(0.92) saturate(0.9);
+}
+
+/* Colored circular initials marker — built via L.divIcon() so it's a real
+   themed element instead of Leaflet's default image-based pin (which also
+   sidesteps a well-known bundler path-resolution issue with that default
+   icon). */
+.fieldpro-map-marker {
+  background: transparent;
+  border: none;
+}
+.fieldpro-map-marker span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  border: 2px solid white;
+  box-shadow: var(--shadow-md);
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Classic teardrop pin for the customer/job-location marker (job-location-map.tsx)
+   — deliberately a different shape than the technician's circular initials
+   marker so "person" vs. "place" reads at a glance. */
+.fieldpro-map-pin {
+  background: transparent;
+  border: none;
+}
+.fieldpro-map-pin span {
+  display: block;
+  width: 26px;
+  height: 26px;
+  background: var(--text-primary);
+  border: 2px solid white;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow: var(--shadow-md);
+}
+
+.leaflet-popup-content-wrapper {
+  background: var(--surface-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
+.leaflet-popup-content {
+  margin: 10px 12px;
+}
+.leaflet-popup-tip {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+}
+.leaflet-popup-close-button {
+  color: var(--text-muted) !important;
+}
+.leaflet-popup-close-button:hover {
+  color: var(--text-primary) !important;
+}
+.leaflet-control-attribution {
+  background: color-mix(in srgb, var(--surface) 85%, transparent) !important;
+  color: var(--text-muted) !important;
+}
+.leaflet-control-attribution a {
+  color: var(--text-secondary) !important;
+}
+.leaflet-control-zoom a {
+  background: var(--surface) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border) !important;
+}
+.leaflet-control-zoom a:hover {
+  background: var(--surface-sunken) !important;
+}

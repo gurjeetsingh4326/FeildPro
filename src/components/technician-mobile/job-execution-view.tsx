@@ -12,8 +12,11 @@ import {
   AddPartModal,
   formatMoney,
 } from "@/components/work-order-detail/wo-labor-parts-tab";
+import { JobLocationMapLoader } from "@/components/maps/job-location-map-loader";
 import { toast } from "@/lib/toast-bus";
 import { STATUS_META } from "@/lib/work-order-status";
+import { getTechnicianByName } from "@/lib/dummy-data/technicians";
+import { getTechnicianLocation, getCustomerLocation } from "@/lib/dummy-data/locations";
 import type { WorkOrderDetail, LaborLine, PartLine, NoteEntry, AttachmentEntry } from "@/lib/dummy-data/work-order-detail";
 import type { WorkOrder } from "@/lib/dummy-data/work-orders";
 import type { WorkOrderStatus } from "@/lib/types";
@@ -98,6 +101,10 @@ export function JobExecutionView({ initial }: { initial: WorkOrderDetail }) {
   const phoneHref = `tel:${initial.customer.phone.replace(/[^\d+]/g, "")}`;
   const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(initial.customer.address)}`;
 
+  const technicianProfile = workOrder.technicianName ? getTechnicianByName(workOrder.technicianName) : null;
+  const technicianLocation = getTechnicianLocation(technicianProfile?.id ?? "");
+  const customerLocation = getCustomerLocation(initial.customer.name);
+
   return (
     <div className="flex flex-1 flex-col">
       <div className="flex flex-1 flex-col gap-3 p-4 pb-2">
@@ -127,6 +134,14 @@ export function JobExecutionView({ initial }: { initial: WorkOrderDetail }) {
             </a>
           </Button>
         </div>
+
+        <JobLocationMapLoader
+          technicianLocation={technicianLocation}
+          customerLocation={customerLocation}
+          technicianName={workOrder.technicianName ?? "You"}
+          customerName={initial.customer.name}
+          technicianColor={technicianProfile?.color ?? "var(--primary)"}
+        />
 
         <SyncIndicator status={syncStatus} />
 

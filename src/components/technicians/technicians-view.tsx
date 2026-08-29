@@ -1,14 +1,16 @@
 "use client";
 
 import * as React from "react";
-import { Search } from "lucide-react";
+import { Search, List, Map as MapIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsPillList, TabsPillTrigger } from "@/components/ui/tabs";
 import { TechnicianFilters } from "@/components/technicians/technician-filters";
 import { NewTechnicianModal } from "@/components/technicians/new-technician-modal";
 import { TechniciansTable, type SortColumn } from "@/components/technicians/technicians-table";
 import { TechniciansMobileList } from "@/components/technicians/technicians-mobile-list";
+import { TechnicianMapLoader } from "@/components/maps/technician-map-loader";
 import {
   TECHNICIANS,
   TECHNICIAN_STATUS_META,
@@ -27,6 +29,7 @@ export function TechniciansView() {
   const [sortColumn, setSortColumn] = React.useState<SortColumn>(null);
   const [sortDirection, setSortDirection] = React.useState<SortDirection>(null);
   const [page, setPage] = React.useState(1);
+  const [view, setView] = React.useState<"table" | "map">("table");
 
   const toggleStatus = (status: TechnicianStatus) => {
     setPage(1);
@@ -97,6 +100,16 @@ export function TechniciansView() {
             />
           </div>
           <TechnicianFilters selectedStatuses={selectedStatuses} onToggleStatus={toggleStatus} activeCount={selectedStatuses.size} />
+          <Tabs value={view} onValueChange={(v) => setView(v as "table" | "map")}>
+            <TabsPillList>
+              <TabsPillTrigger value="table" className="gap-1.5">
+                <List className="size-3.5" /> List
+              </TabsPillTrigger>
+              <TabsPillTrigger value="map" className="gap-1.5">
+                <MapIcon className="size-3.5" /> Map
+              </TabsPillTrigger>
+            </TabsPillList>
+          </Tabs>
         </div>
         <NewTechnicianModal onCreate={handleCreate} />
       </div>
@@ -126,31 +139,37 @@ export function TechniciansView() {
         </div>
       ) : null}
 
-      <div className="hidden md:block">
-        <TechniciansTable technicians={pageItems} sortColumn={sortColumn} sortDirection={sortDirection} onSort={handleSort} />
-      </div>
-      <div className="md:hidden">
-        <TechniciansMobileList technicians={pageItems} />
-      </div>
+      {view === "map" ? (
+        <TechnicianMapLoader technicians={filtered} />
+      ) : (
+        <>
+          <div className="hidden md:block">
+            <TechniciansTable technicians={pageItems} sortColumn={sortColumn} sortDirection={sortDirection} onSort={handleSort} />
+          </div>
+          <div className="md:hidden">
+            <TechniciansMobileList technicians={pageItems} />
+          </div>
 
-      <div className="flex items-center justify-between text-[13px] text-text-secondary">
-        <span>
-          {filtered.length === 0
-            ? "0 results"
-            : `${(page - 1) * PAGE_SIZE + 1}–${Math.min(page * PAGE_SIZE, filtered.length)} of ${filtered.length}`}
-        </span>
-        <div className="flex items-center gap-2">
-          <Button variant="secondary" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
-            Previous
-          </Button>
-          <span>
-            Page {page} of {totalPages}
-          </span>
-          <Button variant="secondary" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>
-            Next
-          </Button>
-        </div>
-      </div>
+          <div className="flex items-center justify-between text-[13px] text-text-secondary">
+            <span>
+              {filtered.length === 0
+                ? "0 results"
+                : `${(page - 1) * PAGE_SIZE + 1}–${Math.min(page * PAGE_SIZE, filtered.length)} of ${filtered.length}`}
+            </span>
+            <div className="flex items-center gap-2">
+              <Button variant="secondary" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+                Previous
+              </Button>
+              <span>
+                Page {page} of {totalPages}
+              </span>
+              <Button variant="secondary" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>
+                Next
+              </Button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

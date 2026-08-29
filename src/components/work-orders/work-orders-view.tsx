@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { DndContext, DragOverlay, type DragEndEvent, type DragStartEvent } from "@dnd-kit/core";
-import { Search, LayoutGrid, List } from "lucide-react";
+import { Search, LayoutGrid, List, Map as MapIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsPillList, TabsPillTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +13,7 @@ import { WorkOrdersTable, type SortColumn } from "@/components/work-orders/work-
 import { WorkOrdersMobileList } from "@/components/work-orders/work-orders-mobile-list";
 import { KanbanBoard } from "@/components/work-orders/kanban-board";
 import { KanbanCardContent } from "@/components/work-orders/kanban-card";
+import { WorkOrdersMapLoader } from "@/components/maps/work-orders-map-loader";
 import { STATUS_META } from "@/lib/work-order-status";
 import { toast } from "@/lib/toast-bus";
 import { WORK_ORDERS, type WorkOrder } from "@/lib/dummy-data/work-orders";
@@ -23,7 +24,7 @@ const PAGE_SIZE = 10;
 
 export function WorkOrdersView() {
   const [workOrders, setWorkOrders] = React.useState<WorkOrder[]>(WORK_ORDERS);
-  const [view, setView] = React.useState<"table" | "kanban">("table");
+  const [view, setView] = React.useState<"table" | "kanban" | "map">("table");
   const [search, setSearch] = React.useState("");
   const [selectedStatuses, setSelectedStatuses] = React.useState<Set<WorkOrderStatus>>(new Set());
   const [selectedPriorities, setSelectedPriorities] = React.useState<Set<WorkOrderPriority>>(new Set());
@@ -150,13 +151,16 @@ export function WorkOrdersView() {
               onTogglePriority={togglePriority}
               activeCount={selectedStatuses.size + selectedPriorities.size}
             />
-            <Tabs value={view} onValueChange={(v) => setView(v as "table" | "kanban")}>
+            <Tabs value={view} onValueChange={(v) => setView(v as "table" | "kanban" | "map")}>
               <TabsPillList>
                 <TabsPillTrigger value="table" className="gap-1.5">
                   <List className="size-3.5" /> Table
                 </TabsPillTrigger>
                 <TabsPillTrigger value="kanban" className="gap-1.5">
                   <LayoutGrid className="size-3.5" /> Board
+                </TabsPillTrigger>
+                <TabsPillTrigger value="map" className="gap-1.5">
+                  <MapIcon className="size-3.5" /> Map
                 </TabsPillTrigger>
               </TabsPillList>
             </Tabs>
@@ -232,8 +236,10 @@ export function WorkOrdersView() {
               </div>
             </div>
           </>
-        ) : (
+        ) : view === "kanban" ? (
           <KanbanBoard workOrders={filtered} />
+        ) : (
+          <WorkOrdersMapLoader workOrders={filtered} />
         )}
       </div>
 

@@ -1,5 +1,7 @@
 import { WORK_ORDERS, type WorkOrder } from "@/lib/dummy-data/work-orders";
 import { getWorkOrderDetail } from "@/lib/dummy-data/work-order-detail";
+import { getTechnicianByName } from "@/lib/dummy-data/technicians";
+import { getTechnicianLocation, getCustomerLocation, distanceMiles, type GeoPoint } from "@/lib/dummy-data/locations";
 
 /** Matches the fixed "today" used throughout the dummy data (Dashboard, Schedule). */
 export const TECHNICIAN_TODAY_ISO = "2026-08-26";
@@ -7,22 +9,21 @@ export const TECHNICIAN_TODAY_ISO = "2026-08-26";
 export interface TechnicianJob {
   workOrder: WorkOrder;
   address: string;
-  /** Fabricated (id-hash-derived) — there's no real geolocation in this dummy build. */
   distanceMiles: number;
 }
 
-function distanceFor(id: string): number {
-  const digits = id.replace(/\D/g, "").slice(-2);
-  const seed = Number(digits) || 0;
-  return Math.round(((seed % 15) + 1.5) * 10) / 10;
-}
-
-function toTechnicianJob(wo: WorkOrder): TechnicianJob {
+function toTechnicianJob(wo: WorkOrder, technicianLocation: GeoPoint): TechnicianJob {
+  const distance = distanceMiles(technicianLocation, getCustomerLocation(wo.customerName));
   return {
     workOrder: wo,
     address: getWorkOrderDetail(wo.id)?.customer.address ?? "Address on file",
-    distanceMiles: distanceFor(wo.id),
+    distanceMiles: Math.round(distance * 10) / 10,
   };
+}
+
+function locationFor(technicianName: string): GeoPoint {
+  const id = getTechnicianByName(technicianName)?.id;
+  return id ? getTechnicianLocation(id) : getTechnicianLocation("");
 }
 
 function timeToMinutes(time: string): number {
@@ -35,15 +36,17 @@ function timeToMinutes(time: string): number {
 
 /** Today's agenda for the given technician, chronological. */
 export function getTechnicianTodayJobs(technicianName: string): TechnicianJob[] {
+  const location = locationFor(technicianName);
   return WORK_ORDERS.filter(
     (wo) => wo.technicianName === technicianName && wo.scheduledDate === TECHNICIAN_TODAY_ISO
   )
     .sort((a, b) => timeToMinutes(a.scheduledTime) - timeToMinutes(b.scheduledTime))
-    .map(toTechnicianJob);
+    .map((wo) => toTechnicianJob(wo, location));
 }
 
 /** Full active pipeline for the given technician (today + upcoming), for the Jobs tab. */
 export function getTechnicianJobs(technicianName: string): TechnicianJob[] {
+  const location = locationFor(technicianName);
   return WORK_ORDERS.filter(
     (wo) =>
       wo.technicianName === technicianName &&
@@ -51,7 +54,7 @@ export function getTechnicianJobs(technicianName: string): TechnicianJob[] {
       !["cancelled", "paid"].includes(wo.status)
   )
     .sort((a, b) => (a.scheduledDate === b.scheduledDate ? timeToMinutes(a.scheduledTime) - timeToMinutes(b.scheduledTime) : a.scheduledDate.localeCompare(b.scheduledDate)))
-    .map(toTechnicianJob);
+    .map((wo) => toTechnicianJob(wo, location));
 }
 
 export interface TechnicianStats {

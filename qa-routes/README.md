@@ -22,6 +22,10 @@ Files:
 - [dispatcher.md](./dispatcher.md)
 - [technician.md](./technician.md)
 - [accountant.md](./accountant.md)
+- [crud-actions.md](./crud-actions.md) — every Create/Update/Delete action
+  in the app, module by module, with the exact button label and where to
+  find it (not role-specific — if a role can reach a screen, it can use
+  every action on it, see the caveat at the top of that file)
 
 Sample record IDs (for testing the `/…/[id]` detail pages) live at the
 bottom of each role's file, limited to what that role can actually reach

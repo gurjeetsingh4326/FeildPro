@@ -1,7 +1,7 @@
 
 import type { NextConfig } from 'next'
 
-const repoName = 'YOUR_REPOSITORY_NAME'
+const repoName = 'FeildPro'
 
 const nextConfig: NextConfig = {
   output: 'export',

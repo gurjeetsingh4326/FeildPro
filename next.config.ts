@@ -1,7 +1,14 @@
-import type { NextConfig } from "next";
+
+import type { NextConfig } from 'next'
+
+const repoName = 'YOUR_REPOSITORY_NAME'
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
+  output: 'export',
+  basePath: `/${repoName}`,
+  images: {
+    unoptimized: true,
+  },
+}
 
-export default nextConfig;
+export default nextConfig
